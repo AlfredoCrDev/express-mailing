@@ -1,32 +1,55 @@
 const UserRepository = require('../repositories/userRepository');
+const utils = require("../utils")
+const userRepository = new UserRepository();
 
-class UserService {
-  constructor() {
-    this.userRepository = new UserRepository();
-  }
-
-  async getAllUsers() {
-    return await this.userRepository.getAllUsers();
-  }
-
-  async getUserByEmail(userEmail) {
-    return await this.userRepository.getUserByEmail(userEmail);
-  }
-
-  async createUser(userData) {
-    return await this.userRepository.createUser(userData);
-  }
-
-  async updateUser(userEmail, userData) {
-    if(userData.email){
-      throw new Error("No se puede modificar el correo electrónico")
-    }
-    return await this.userRepository.updateUser(userEmail, userData);
-  }
-
-  async deleteUser(userEmail) {
-    return await this.userRepository.deleteUser(userEmail);
-  }
+// Función para obtener todos los usuarios
+async function getAllUsers() {
+  return userRepository.getAllUsers();
 }
 
-module.exports = UserService;
+// Función para obtener un usuario por correo electrónico
+async function getUserByEmail(userEmail) {
+  return userRepository.getUserByEmail(userEmail);
+}
+
+async function validEmail(userEmail) {
+  return userRepository.validEmail(userEmail);
+}
+
+// Función para crear un nuevo usuario
+async function createUser({ first_name, last_name, email, age, password, rol }) {
+  const newUser = {
+    first_name,
+    last_name,
+    email,
+    age,
+    password: utils.createHash(password),
+    // cart: cartManager.addNewCart(),
+    rol,
+  };
+
+  return userRepository.createUser(newUser);
+}
+
+// Función para actualizar un usuario
+async function updateUser(userEmail, userData) {
+  if (userData.email) {
+    throw new Error("No se puede modificar el correo electrónico");
+  }
+
+  return userRepository.updateUser(userEmail, userData);
+}
+
+// Función para eliminar un usuario
+async function deleteUser(userEmail) {
+  return userRepository.deleteUser(userEmail);
+}
+
+module.exports = {
+  getAllUsers,
+  getUserByEmail,
+  createUser,
+  updateUser,
+  deleteUser,
+  validEmail
+};

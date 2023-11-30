@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   last_name: {type: String, max: 30},
   email: {type: String, max: 30},
   age: {type: Number},
-  password: {type: String, max: 60},
+  password: {type: String},
   cart:[
     {
       type: [

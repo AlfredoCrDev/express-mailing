@@ -4,7 +4,7 @@ class UserRepository {
   async getAllUsers() {
     try {
       const users = await userModel.find();
-      return users;
+      return { result: "success", payload: users };
     } catch (error) {
       throw new Error(`Error en UserRepository.getAllUsers: ${error.message}`);
     }
@@ -18,6 +18,16 @@ class UserRepository {
       throw new Error(`Error en UserRepository.getUserByEmail: ${error.message}`);
     }
   }
+
+  async validEmail(userEmail) {
+    try {
+      const user = await userModel.findOne({ email: userEmail });
+      return !!user; 
+    } catch (error) {
+      throw new Error(`Error en UserRepository.validEmail: ${error.message}`);
+    }
+  }
+  
 
   async createUser(userData) {
     try {
