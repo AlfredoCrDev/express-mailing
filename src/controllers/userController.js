@@ -48,7 +48,7 @@ async createUser(req, res) {
   
   try {
     // Verificar si el correo electrónico ya está en uso
-    const emailExists = await userService.validEmail(email);
+    const emailExists = await userService.getUserByEmail(email);
     
     if (emailExists) {
       return res.status(400).json({ status: "error", message: "El correo electrónico ya está en uso" });

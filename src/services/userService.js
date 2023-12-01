@@ -12,10 +12,6 @@ async function getUserByEmail(userEmail) {
   return userRepository.getUserByEmail(userEmail);
 }
 
-async function validEmail(userEmail) {
-  return userRepository.validEmail(userEmail);
-}
-
 // Función para crear un nuevo usuario
 async function createUser({ first_name, last_name, email, age, password, rol }) {
   const newUser = {
@@ -50,6 +46,5 @@ module.exports = {
   getUserByEmail,
   createUser,
   updateUser,
-  deleteUser,
-  validEmail
+  deleteUser
 };

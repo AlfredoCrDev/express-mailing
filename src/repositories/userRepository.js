@@ -19,15 +19,6 @@ class UserRepository {
     }
   }
 
-  async validEmail(userEmail) {
-    try {
-      const user = await userModel.findOne({ email: userEmail });
-      return !!user; 
-    } catch (error) {
-      throw new Error(`Error en UserRepository.validEmail: ${error.message}`);
-    }
-  }
-  
 
   async createUser(userData) {
     try {
