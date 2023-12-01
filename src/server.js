@@ -28,6 +28,7 @@ connectDB();
 // Importando Rutas
 const userRoutes = require('./routes/user.router.js');
 // const authRoutes = require('./routes/auth.router.js')
+const productRoutes = require("./routes/product.router.js")
 const vistasRouter = require("./routes/vistas.Router.js")
 
 
@@ -40,6 +41,7 @@ initializaPassport()
 app.use(passport.initialize())
 
 app.use("/users", userRoutes)
+app.use("/products", productRoutes)
 app.use("/", vistasRouter)
 
 

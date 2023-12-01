@@ -5,7 +5,7 @@ const productCollecion = "products"
 
 const productSchema = new mongoose.Schema({
   title: {type: String, max: 30, required: true},
-  description: {type: String, max: 60, required: true},
+  description: {type: String, max: 60},
   price: {type: Number, required: true},
   stock: {type: Number, required: true},
   category: {type: String, max: 15, required: true},
@@ -14,6 +14,15 @@ const productSchema = new mongoose.Schema({
 })
 
 productSchema.plugin(mongoosePaginate);
+
+productSchema.pre("save", function (next) {
+  // Si el stock es igual a 0, establecer el status en false
+  if (this.stock === 0) {
+    this.status = false;
+  }
+  next();
+});
+
 const productModel = mongoose.model(productCollecion, productSchema)
 
-module.exports = { productModel }
+module.exports = productModel
