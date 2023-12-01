@@ -1,5 +1,6 @@
 const userService = require('../services/userService');
 const utils = require("../utils")
+const passport = require("passport")
 
 class UserController {
   async getAllUsers(req, res) {
@@ -8,6 +9,27 @@ class UserController {
       res.json(users);
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  }
+
+  async loginUser(req, res) {
+    try {
+      passport.authenticate('login', { session: false }, (err, user, info) => {
+        if (err) {
+          console.error('Error en autenticación:', err);
+          return res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+        }
+        if (!user) {
+          console.error('Usuario no autenticado:', info.message);
+          return res.status(401).json({ status: 'error', message: 'Credenciales incorrectas' });
+        }
+        const token = utils.generateToken(user);
+        res.cookie('token', token, { httpOnly: true, maxAge: 60 * 60 * 1000 });
+        res.json({ status: 'success', user, token });
+      })(req, res);
+    } catch (error) {
+      console.error('Error al tratar de hacer login:', error);
+      res.status(500).json({ status: 'error', message: 'Se ha producido un error inesperado' });
     }
   }
 
