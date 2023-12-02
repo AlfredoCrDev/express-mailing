@@ -29,18 +29,23 @@ async function createProduct({ title, description, price, stock, category, code 
   return productRepository.createProduct(newProduct);
 }
 
-// Función para actualizar un usuario
-async function updateUser(userEmail, userData) {
-  if (userData.email) {
-    throw new Error("No se puede modificar el correo electrónico");
+// Función para actualizar un producto
+async function updateProduct(productId, productData) {
+  try {
+    if (productData.stock === 0) {
+      productData.status = false;
+    } else {
+      productData.status = true;
+    }
+    return await productRepository.updateProduct(productId, productData)
+  } catch (error) {
+    throw new Error(`Error in ProductService.updateProduct: ${error.message}`);
   }
-
-  return productRepository.updateUser(userEmail, userData);
 }
 
-// Función para eliminar un usuario
-async function deleteUser(userEmail) {
-  return productRepository.deleteUser(userEmail);
+// Función para eliminar un producto
+async function deleteProduct(productId) {
+  return productRepository.deleteProduct(productId);
 }
 
 module.exports = {
@@ -48,6 +53,6 @@ module.exports = {
   findProductsByName,
   createProduct,
   getProductByCode,
-  updateUser,
-  deleteUser
+  updateProduct,
+  deleteProduct
 };

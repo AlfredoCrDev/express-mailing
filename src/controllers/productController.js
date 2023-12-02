@@ -43,22 +43,22 @@ async createProduct(req, res) {
 }
 
 
-  async updateproduct(req, res) {
-    const productId = req.params.pid;
-    const productData = req.body;
+  async updateProduct(req, res) {
     try {
-      const updatedProduct = await productService.updateproduct(productId, productData);
+      const productId = req.params.pid;
+      const productData = req.body;
+      const updatedProduct = await productService.updateProduct(productId, productData);
       res.json(updatedProduct);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   }
 
-  async deleteUser(req, res) {
-    const userEmail = req.params.id;
+  async deleteProduct(req, res) {
+    const productId = req.params.id;
     try {
-      const result = await userService.deleteUser(userEmail);
-      res.json({ message: 'User deleted successfully', result });
+      const product = await productService.deleteProduct(productId);
+      res.json({ message: 'Product deleted successfully', product });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

@@ -9,11 +9,7 @@ router.get('/', productController.getAllProducts);
 router.post('/search', productController.findProductsByName);
 router.post('/addProduct', productController.createProduct);
 router.put('/update/:pid', productController.updateProduct);
-
-
-router.post('/login', productController.loginUser);
-router.put('/:id', productController.updateUser);
-router.delete('/:id', productController.deleteUser);
+router.delete('/:id', productController.deleteProduct);
 
 
 module.exports = router;

@@ -41,21 +41,31 @@ async findProductsByName(productName) {
     }
   }
 
-  async updateUser(userEmail, userData) {
+  async updateProduct(productId, productData) {
     try {
-      const updatedUser = await productModel.updateOne({email: userEmail}, userData);
-      return updatedUser;
+      const updateData = await productModel.updateOne({_id: productId}, productData);
+      if (updateData.modifiedCount > 0) {
+        return {
+          success: true,
+          message: "Producto modificado correctamente",
+        };
+      } else {
+        return {
+          success: false,
+          message: `No se encontró un producto con el ID: ${productId}`,
+        };
+      }
     } catch (error) {
-      throw new Error(`Error en ProductRepository.updateUser: ${error.message}`);
+      throw new Error(`Error en ProductRepository.updateProduct: ${error.message}`);
     }
   }
 
-  async deleteUser(userEmail) {
+  async deleteProduct(productId) {
     try {
-      const result = await productModel.deleteOne({email: userEmail});
+      const result = await productModel.deleteOne({_id: productId});
       return result;
     } catch (error) {
-      throw new Error(`Error en ProductRepository.deleteUser: ${error.message}`);
+      throw new Error(`Error en ProductRepository.deleteProduct: ${error.message}`);
     }
   }
 }
