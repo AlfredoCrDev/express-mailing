@@ -1,6 +1,10 @@
 const UserRepository = require('../repositories/userRepository');
+const CartRepository = require('../repositories/cartRepository');
 const utils = require("../utils")
+
+// Instanciando clases
 const userRepository = new UserRepository();
+const cartRepository = new CartRepository()
 
 // Función para obtener todos los usuarios
 async function getAllUsers() {
@@ -20,7 +24,7 @@ async function createUser({ first_name, last_name, email, age, password, rol }) 
     email,
     age,
     password: utils.createHash(password),
-    // cart: cartManager.addNewCart(),
+    cart: cartRepository.addNewCart(),
     rol,
   };
 
