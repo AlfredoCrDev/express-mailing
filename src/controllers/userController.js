@@ -20,7 +20,6 @@ class UserController {
           return res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
         }
         if (!user) {
-          console.error('Usuario no autenticado:', info.message);
           return res.status(401).json({ status: 'error', message: 'Credenciales incorrectas' });
         }
         const token = utils.generateToken(user);
@@ -66,7 +65,6 @@ async createUser(req, res) {
   }
 }
 
-
   async updateUser(req, res) {
     const userId = req.params.id;
     const userData = req.body;
@@ -86,6 +84,10 @@ async createUser(req, res) {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
+  }
+
+  async getUserInfo(req, res) {
+    res.send({status:"success", payload:req.user})
   }
 }
 

@@ -4,7 +4,13 @@ const productRepository = new ProductRepository();
 
 // Función para obtener todos los productos
 async function getAllProducts() {
-  return productRepository.getAllProducts();
+  try {
+    const result = await productRepository.getAllProducts();
+    return result;
+  } catch (error) {
+    console.log('Error en ProductService.getAllProducts:', error);
+    throw error;
+  }
 }
 
 // Función para obtener los productos por nombre

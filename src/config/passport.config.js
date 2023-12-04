@@ -36,7 +36,6 @@ const initializaPassport = () => {
     }, async (username, password, done) => {
       try {
         const user = await userService.getUserByEmail(username);
-        console.log('User', user)
         if (!user) {
           return done(null, false, { message: 'Usuario no existe' });
         }
@@ -78,19 +77,47 @@ const initializaPassport = () => {
   //     }
   //   }))
 
-  //   // JWT
-  // passport.use('jwt', new JwtStrategy({
-  //     jwtFromRequest:ExtractJwt.fromExtractors([cookieExtractor]),
-  //     secretOrKey: config.secretOrKey
-  // }, async(jwt_payload, done)=>{
-  //     try{
-  //         return done(null, jwt_payload)
+    // JWT
+  passport.use('jwt', new JwtStrategy({
+      jwtFromRequest:ExtractJwt.fromExtractors([cookieExtractor]),
+      secretOrKey: process.env.SECRET_OR_KEY
+  }, async(jwt_payload, done)=>{
+      try{
+          return done(null, jwt_payload)
+      }
+      catch(err){
+          return done(err)
+      }
+  }
+  ))
+
+  // passport.use("current", new JwtStrategy({
+  //   jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+  //   secretOrKey: process.env.SECRET_OR_KEY,
+  // }, async (payload, done) => {
+    
+  //   try {
+  //     /* console.log('Current JWT Strategy - Payload:', payload); */
+  //     const user = await userService.getUserByEmail(payload.user.email);
+  //     if (!user) {
+  //       return done(null, false);
   //     }
-  //     catch(err){
-  //         return done(err)
-  //     }
-  // }
-  // ))
+  //     // Verificar si el usuario recuperado coincide con la estructura esperada en el DTO
+  //     /* const userDTO = new UserDTO(user); */ // Crear un DTO a partir del usuario
+  //     const userDTO = {
+  //       email: user.email, // Asegúrate de incluir el email u otra información necesaria
+  //       nombre: user.nombre, // Agrega el campo 'nombre' al objeto userDTO
+  //       apellido: user.apellido,
+  //       carrito: user.cart,
+  //       rol: user.rol,
+  //     };
+  //     /* console.log("por aqui pasa", userDTO); */
+  //     /* console.log("token de passport", token)  */
+  //     return done(null, userDTO); // Pasar el DTO al done
+  //   } catch (err) {
+  //     return done(err, false);
+  //   }
+  // }));
 
 }
 

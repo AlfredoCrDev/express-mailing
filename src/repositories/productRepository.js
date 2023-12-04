@@ -2,10 +2,36 @@ const productModel = require('../models/products.model');
 
 class ProductRepository {
   // Función para buscar todos los productos
-  async getAllProducts() {
+  async getAllProducts({ limit, page, sort, status, category }) {
     try {
-      const products = await productModel.find();
-      return { result: "success", payload: products };
+        const queryOptions = {};
+  
+        if (limit) {
+          queryOptions.limit = parseInt(limit);
+        } else {
+          queryOptions.limit = 10;
+        }
+  
+        queryOptions.page = parseInt(page);
+  
+        if (sort) {
+          queryOptions.sort = sort === 'asc' ? 'price' : '-price';
+        }
+  
+        const filter = {};
+  
+        if (category) {
+          filter.category = category;
+        } else if (status === 'true') {
+          filter.status = true;
+        } else if (status === 'false') {
+          filter.status = false;
+        }
+  
+        const result = await productModel.paginate(filter, queryOptions);
+        const leanProducts = result.docs.map((product) => product.toObject());
+        result.docs = leanProducts
+        return result;  
     } catch (error) {
       throw new Error(`Error en ProductRepository.getAllProducts: ${error.message}`);
     }

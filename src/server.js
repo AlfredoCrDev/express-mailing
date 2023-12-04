@@ -2,6 +2,8 @@ const express = require("express")
 const app = express()
 const handlebars = require("express-handlebars");
 const path = require("path");
+const cookieParser = require("cookie-parser");
+
 
 // Importando funcion de conexion de la db
 const connectDB = require("./config/db.js")
@@ -37,7 +39,8 @@ const PORT = process.env.PORT
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser());
+// Inicializar el middleware de autenticacion
 initializaPassport()
 app.use(passport.initialize())
 

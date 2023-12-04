@@ -5,10 +5,11 @@ const passport = require("passport")
 class ProductController {
   async getAllProducts(req, res) {
     try {
-      const products = await productService.getAllProducts();
-      res.json(products);
+      const result = await productService.getAllProducts();
+      res.json(result);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.log('Error en ProductController.getProducts:', error);
+      res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
     }
   }
 
