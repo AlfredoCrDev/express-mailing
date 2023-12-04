@@ -3,9 +3,9 @@ const utils = require("../utils")
 const productRepository = new ProductRepository();
 
 // Función para obtener todos los productos
-async function getAllProducts() {
+async function getAllProducts( {limit, page, sort, status, category} ) {
   try {
-    const result = await productRepository.getAllProducts();
+    const result = await productRepository.getAllProducts( {limit, page, sort, status, category} );
     return result;
   } catch (error) {
     console.log('Error en ProductService.getAllProducts:', error);

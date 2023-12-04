@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const utils = require("../utils");
-const ProductRepository = require('../repositories/productRepository');
-const productRepository = new ProductRepository();
+const ProductController = require('../repositories/productRepository');
+const productController = new ProductController();
 
 // VISTAS
 
@@ -46,7 +46,7 @@ router.get("/products", utils.passportCall("jwt"), utils.authorization(allowedRo
     }
     const { limit = 10 , page = 1} = req.query;
 
-    const products = await productRepository.getAllProducts(limit, page,)
+    const products = await productController.getAllProducts(limit, page,)
 
     res.render("productos", { 
       title: "Lista de productos",

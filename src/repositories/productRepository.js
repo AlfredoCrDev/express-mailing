@@ -2,7 +2,7 @@ const productModel = require('../models/products.model');
 
 class ProductRepository {
   // Función para buscar todos los productos
-  async getAllProducts({ limit, page, sort, status, category }) {
+  async getAllProducts( {limit, page, sort, status, category} ) {
     try {
         const queryOptions = {};
   
@@ -12,8 +12,12 @@ class ProductRepository {
           queryOptions.limit = 10;
         }
   
-        queryOptions.page = parseInt(page);
-  
+        if (page){
+          queryOptions.page = parseInt(page);
+        } else {
+          queryOptions.page = 1;
+        }
+
         if (sort) {
           queryOptions.sort = sort === 'asc' ? 'price' : '-price';
         }

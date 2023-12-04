@@ -4,8 +4,9 @@ const passport = require("passport")
 
 class ProductController {
   async getAllProducts(req, res) {
+    const { limit, page, sort, status, category } = req.query
     try {
-      const result = await productService.getAllProducts();
+      const result = await productService.getAllProducts( {limit, page, sort, status, category} );
       res.json(result);
     } catch (error) {
       console.log('Error en ProductController.getProducts:', error);
