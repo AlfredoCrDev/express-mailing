@@ -24,7 +24,6 @@ async function createUser({ first_name, last_name, email, age, password, rol }) 
     email,
     age,
     password: utils.createHash(password),
-    cart: cartRepository.addNewCart(),
     rol,
   };
 

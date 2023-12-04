@@ -31,13 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
           },
         }); 
 
-        console.log(userResponse);
         if (userResponse.ok) {
           const userData = await userResponse.json();
           if (userData.payload.rol === "admin") {
             // Redirige al perfil de administrador
             window.location.assign("/profile");
-          } else if (userData.rol === "usuario") {
+          } else if (userData.payload.rol === "usuario") {
             // Redirige a la página de productos para usuarios
             window.location.assign("/products");
           }

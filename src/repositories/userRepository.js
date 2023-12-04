@@ -1,3 +1,4 @@
+const cartModel = require('../models/carts.model.js');
 const userModel = require('../models/user.model.js');
 
 class UserRepository {
@@ -22,9 +23,13 @@ class UserRepository {
 
   async createUser(userData) {
     try {
-      const newUser = new userModel(userData);
-      await newUser.save();
-      return newUser;
+      const user = new userModel(userData);
+
+      const cart = await cartModel.create({user: user._id})
+
+      user.cart = cart._id
+      await user.save();
+      return user;
     } catch (error) {
       throw new Error(`Error en UserRepository.createUser: ${error.message}`);
     }

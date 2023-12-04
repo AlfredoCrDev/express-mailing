@@ -47,12 +47,14 @@ router.get("/products", utils.passportCall("jwt"), utils.authorization(allowedRo
     const { limit = 10 , page = 1} = req.query;
 
     const products = await productController.getAllProducts(limit, page,)
+    const cartId = user.cart
 
     res.render("productos", { 
       title: "Lista de productos",
       products: products,
       email : user.email,
-      rol: user.rol
+      rol: user.rol,
+      cart: cartId
     })
   } catch (error) {
     console.log("Error al tratar de mostrar los productos", error);

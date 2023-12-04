@@ -4,7 +4,8 @@ class CartController {
 
   async addnewCart(req, res) {
     try {
-      const cart = await cartService.addNewCart()
+      const newCart = req.body
+      const cart = await cartService.addNewCart(newCart)
       res.status(200).send({message: "Nuevo carrito creado", cart})
       console.log("Carrito creado con éxito");
     } catch (error) {
@@ -37,8 +38,9 @@ class CartController {
   }
 
   async addProductToCart(req, res) {
-    const { cartId, productId, quantity } = req.body;
-  
+    const { quantity } = req.query;
+    const cartId = req.params.cid
+    const productId = req.params.pid
     try {
       const result = await cartService.addProductToCart(cartId, productId, quantity);
   

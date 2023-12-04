@@ -2,9 +2,9 @@ const cartModel = require("../models/carts.model.js")
 const productModel = require("../models/products.model.js")
 
 class CarRepository {
-  async addNewCart(){
+  async addNewCart(newCart){
     try {
-      const carrito = new cartModel({products: []})
+      const carrito = new cartModel(newCart)
       await carrito.save()
       console.log("Carrito creado con éxito", carrito);
       return carrito;
@@ -42,7 +42,7 @@ class CarRepository {
     }
   }
 
-  async addProductToCart(cartId, productId, quantity){
+  async addProductToCart(cartId, productId, quantity=1){
     try {
       const cart = await cartModel.findOne({_id: cartId})
       const product = await productModel.findOne({_id: productId});
@@ -69,8 +69,8 @@ class CarRepository {
     }
   
     // Restar la cantidad del stock del producto
-    const updatedStock = product.stock - quantity;
-    await productModel.updateOne({_id: productId}, { stock: updatedStock });
+    // const updatedStock = product.stock - quantity;
+    // await productModel.updateOne({_id: productId}, { stock: updatedStock });
 
     // Buscar si el producto ya está en el carrito
     const productIndex = cart.products.findIndex((p) => {

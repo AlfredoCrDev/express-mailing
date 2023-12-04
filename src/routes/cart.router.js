@@ -7,7 +7,7 @@ const cartController = new CartController()
 router.post("/", cartController.addnewCart)
 router.get("/", cartController.getAllCarts)
 router.get("/:cid", cartController.getCartById)
-router.post("/addProduct", cartController.addProductToCart)
+router.post("/:cid/product/:pid", cartController.addProductToCart)
 router.delete('/:cid/:pid', cartController.removeProductFromCart);
 router.delete('/:cid', cartController.deleteCart);
 router.put('/updateQuantity', cartController.updateCartItemQuantity);

@@ -1,9 +1,9 @@
 const CartRepository = require("../repositories/cartRepository.js")
 const cartRepository = new  CartRepository();
 
-async function addNewCart() {
+async function addNewCart(newCart) {
   try {
-    return await cartRepository.addNewCart()
+    return await cartRepository.addNewCart(newCart)
   } catch (error) {
     throw new Error(`Error in CartRepository.addNewCart: ${error.message}`);
   }
