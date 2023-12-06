@@ -33,6 +33,7 @@ const userRoutes = require('./routes/user.router.js');
 const productRoutes = require("./routes/product.router.js")
 const cartRouter = require("./routes/cart.router.js")
 const vistasRouter = require("./routes/vistas.Router.js")
+const mailRouter = require("./routes/mail.router.js")
 
 
 const PORT = process.env.PORT
@@ -48,6 +49,7 @@ app.use("/users", userRoutes)
 app.use("/products", productRoutes)
 app.use("/cart", cartRouter)
 app.use("/", vistasRouter)
+app.use("/", mailRouter)
 
 
 app.listen(PORT, ()=>{

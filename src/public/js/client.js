@@ -51,3 +51,52 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+const emailForm = document.getElementById("emailForm");
+if(emailForm){
+  emailForm.addEventListener("submit", async(e)=>{
+    e.preventDefault();
+    const nombre = document.getElementById("nombre").value
+    const destinatario = document.getElementById("destinatario").value
+    const asunto = document.getElementById("asunto").value
+    const mensaje = document.getElementById("mensaje").value
+  
+    const response = await fetch("/correo", {
+      method:"POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({nombre, destinatario, asunto, mensaje})
+    })
+    if(!response.ok) throw new Error("No se ha podido enviar el correo.")
+    alert("Correo enviado correctamente.");
+    emailForm.reset()
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+  })
+}
+
+const logoutButton = document.getElementById("logoutButton");
+
+if (logoutButton) {
+  logoutButton.addEventListener("click", async (e) => {
+    try {
+      const response = await fetch("/users/logout", {
+        method: "GET", 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al cerrar sesión');
+      }
+
+      // Limpiar localStorage u otras acciones después de cerrar sesión
+      localStorage.removeItem("token");
+
+      // Redirigir a la página de inicio de sesión u otra página
+      window.location.href = "/";
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+  });
+}

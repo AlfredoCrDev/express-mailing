@@ -74,6 +74,16 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
+const isUser = (req, res, next) => {
+  const user = req.user.user;
+
+  if (!user || user.rol !== "usuario") {
+    return res.status(403).send({ error: "No tienes permiso. Seccion solo para usuarios" });
+  }
+
+  next();
+};
+
 const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
 const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password)
@@ -85,5 +95,6 @@ module.exports = {
   authToken,
   passportCall,
   authorization,
-  isAdmin
+  isAdmin,
+  isUser
 }

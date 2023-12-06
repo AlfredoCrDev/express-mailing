@@ -61,5 +61,15 @@ router.get("/products", utils.passportCall("jwt"), utils.authorization(allowedRo
   }
 })
 
+router.get("/email", utils.passportCall("jwt"), utils.isUser, async(req, res) => {
+  try {
+    
+    res.render("sendEmail", { title: "Envio de Correo" })
+  } catch (error) {
+    console.log("Error al tratar de mostrar los productos", error);
+    res.status(500).send("Error interno del servidor");
+  }
+})
+
 
 module.exports = router;

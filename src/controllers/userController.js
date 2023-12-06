@@ -46,7 +46,6 @@ async createUser(req, res) {
   const { first_name, last_name, email, age, password, rol } = req.body;
   
   try {
-    // Verificar si el correo electrónico ya está en uso
     const emailExists = await userService.getUserByEmail(email);
     
     if (emailExists) {
@@ -89,6 +88,11 @@ async createUser(req, res) {
   async getUserInfo(req, res) {
     res.send({status:"success", payload:req.user})
   }
+
+  async logoutUser(req, res) {
+    res.clearCookie('token'); // No funciona buscar manera de eliminar la cookie
+    res.redirect('/');
+  };
 }
 
 module.exports = UserController;

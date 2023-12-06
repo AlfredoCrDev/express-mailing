@@ -12,8 +12,10 @@
   <h4 class="tituloProducto">Bienvenido: {{email}}</h4>
   <h4 class="tituloProducto">Rol: {{rol}}</h4>
   <h4 class="tituloProducto">Carrito: {{cart}}</h4>
+  <a href="/email">Enviar un mensaje</a>
   <div class="go-to-logout-products">
-    <a href="/logout">Cerrar Sesión</a>
+    <button id="logoutButton">Cerrar Sesión</button>
+  </div><div class="go-to-logout-products">
   </div>
   <div class="container">
     {{#each products.docs}}
@@ -38,6 +40,8 @@
   <a href="/products?limit={{products.limit}}&page={{products.nextPage}}" class="page-link">Página siguiente</a>
   {{/if}}
 </div>
+
+  <script src="/js/client.js"></script>
 </body>
 
 </html>
