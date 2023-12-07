@@ -44,10 +44,8 @@ class UserController {
 
 async createUser(req, res) {
   const { first_name, last_name, email, age, password, rol } = req.body;
-  
   try {
     const emailExists = await userService.getUserByEmail(email);
-    
     if (emailExists) {
       return res.status(400).json({ status: "error", message: "El correo electrónico ya está en uso" });
     }
@@ -56,10 +54,9 @@ async createUser(req, res) {
     const user = await userService.createUser({ first_name, last_name, email, age, password, rol });
     
     let token = utils.generateToken(user);
-    res.json({ status: "success", token });
-    console.log("Este es el Token: ", token);
+    res.status(200).json({ status: "success", token, redirect: "/" });
   } catch (error) {
-    console.log("Error al crear al usuario: ", error);
+    console.log("Error al crear al usuario en el controlador: ", error);
     res.status(400).json({ status: "error", message: error.message });
   }
 }

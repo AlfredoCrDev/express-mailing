@@ -71,5 +71,17 @@ router.get("/email", utils.passportCall("jwt"), utils.isUser, async(req, res) =>
   }
 })
 
+router.get("/createProducts", utils.passportCall("jwt"), utils.isAdmin, async(req, res) => {
+  try {
+    
+    res.render("realTimeProducts", { title: "Registro de Productos" })
+  } catch (error) {
+    console.log("Error al tratar de mostrar los productos", error);
+    res.status(500).send("Error interno del servidor");
+  }
+})
+
+
+
 
 module.exports = router;
