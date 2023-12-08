@@ -4,6 +4,10 @@ const handlebars = require("express-handlebars");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 
+// Importar Controladores para Socket
+const ProductController = require("./controllers/productController.js");
+const productController = new ProductController();
+
 // Importando funcion de conexion de la db
 const connectDB = require("./config/db.js")
 
@@ -40,20 +44,31 @@ const socketIo = require("socket.io");
 const { Server } = require("socket.io");
 const server = http.createServer(app);
 const io = new Server(server);
+global.io = io;
 
 /************  SOCKET.IO *******************/
 io.on("connection", (socket) => {
   console.log("Cliente conectado a Socket.io");
 
   socket.on("agregarProducto", async (nuevoProducto) => {
-    const newProducto = await productManager.addProduct(nuevoProducto);
+    console.log("Nuevo producto: ", nuevoProducto);
+    const newP = {
+      title: nuevoProducto.title,
+      description: nuevoProducto.descripcion,
+      price: nuevoProducto.price,
+      stock: nuevoProducto.stock,
+      code: nuevoProducto.code,
+      category: nuevoProducto.category,
+      status: nuevoProducto.status,
+    };
+    const newProducto = await productController.createProduct(newP);
 
     // Emitiendo un evento para actualizar la lista en el cliente.
     io.emit("productoAgregado", newProducto);
   });
 
   socket.on("eliminarProducto", async (productoId) => {
-    await productManager.deleteProduct(parseInt(productoId));
+    await productController.deleteProduct(productoId);
 
     // Emitiendo un evento para actualizar la lista en el cliente.
     io.emit("productoEliminado", productoId);
@@ -82,6 +97,6 @@ app.use("/", vistasRouter)
 app.use("/", mailRouter)
 
 
-app.listen(PORT, ()=>{
+server.listen(PORT, ()=>{
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 })

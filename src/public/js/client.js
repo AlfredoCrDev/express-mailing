@@ -119,10 +119,8 @@ if(formRegister){
     })
     if (response.ok) {
       const data = await response.json();
-      console.log("Data", data);
-      console.log(data.redirect);
       if (data.redirect) {
-        alert("Usuario Creado Con Exito, sera rediregido al inicio!");
+        alert("Usuario Creado Con Exito, sera redirigido al inicio!");
         window.location.assign(data.redirect);
       } else {
         console.log("Respuesta exitosa:", data);
@@ -135,3 +133,116 @@ if(formRegister){
     }
   })
 }
+
+// Función para agregar un producto a la tabla
+function agregarProductoALaTabla(producto) {
+  const tablaProductos = document.querySelector("table tbody");
+
+  // Crear una nueva fila de tabla para el producto
+  const nuevaFila = document.createElement("tr");
+  nuevaFila.innerHTML = `
+            <td>${producto.id}</td>
+            <td>${producto.title}</td>
+            <td>${producto.description}</td>
+            <td>$ ${producto.price}</td>
+            <td>${producto.stock}</td>
+            <td>${producto.code}</td>
+            <td>${producto.thumbnail}</td>
+            <td>${producto.category}</td>
+            <td>${producto.status}</td>
+        `;
+
+  // Agregar la nueva fila a la tabla
+  tablaProductos.appendChild(nuevaFila);
+}
+
+// Función para eliminar un producto de la tabla
+function eliminarProductoDeLaTabla(productId) {
+  const filaAEliminar = document.querySelector(`body > table > tbody > tr[data-id="${productId}"]`);
+  if (filaAEliminar) {
+    filaAEliminar.remove();
+  }
+}
+
+// Manejar el evento submit del formulario de eliminar
+const formularioEliminar = document.getElementById("formulario-eliminar");
+
+if (formularioEliminar) {
+  formularioEliminar.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const productId = document.getElementById("idProduct").value;
+
+    const response = await fetch(`/products/${productId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      // body: JSON.stringify({ productId })
+    });
+    console.log(response);
+    if (response.ok) {
+      eliminarProductoDeLaTabla(productId);
+      alert("Producto eliminado con éxito");
+      formularioEliminar.reset();
+      window.location.reload();
+    } else {
+      // Error al eliminar el producto
+      const errorMessage = await response.json();
+      console.error(errorMessage);
+      alert("Error al eliminar el producto");
+    }
+  });
+}
+
+
+// Manejar el evento submit del formulario de agregar
+const formularioAgregar = document.getElementById("formulario-agregar");
+
+formularioAgregar.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  // Obtener los valores ingresados por el usuario
+  const title = document.getElementById("title").value;
+  const description = document.getElementById("description").value;
+  const price = parseFloat(document.getElementById("price").value);
+  const stock = parseInt(document.getElementById("stock").value);
+  const code = document.getElementById("code").value;
+  const category = document.getElementById("category").value;
+  const status = document.getElementById("status").value;
+
+  // Validar que los campos no estén vacíos
+  if (!title || !description || isNaN(price) || isNaN(stock) || !code) {
+    alert("Por favor, complete todos los campos.");
+    return;
+  }
+
+  // Crear un objeto que representa el nuevo producto
+  const nuevoProducto = {
+    title,
+    description,
+    price,
+    stock,
+    code,
+    category,
+    status,
+  };
+
+
+
+  // Limpiar los campos del formulario después de agregar el producto
+  formularioAgregar.reset();
+
+});
+
+// Chat 
+// const formularioMensaje = document.getElementById("formulario-mensaje");
+// formularioMensaje.addEventListener("submit", (e) => {
+//   e.preventDefault();
+
+//   const usuario = document.getElementById("usuario").value;
+//   const mensaje = document.getElementById("mensaje").value;
+
+//   const newMessage = {
+//     user: usuario,
+//     message: mensaje,
+//   };
+// });

@@ -33,7 +33,7 @@ function eliminarProductoDeLaTabla(productId) {
 const formularioEliminar = document.getElementById("formulario-eliminar");
 formularioEliminar.addEventListener("submit", (e) => {
   e.preventDefault();
-
+  console.log("Holis");
   // Obtener los valores ingresados por el usuario
   const productId = document.getElementById("idProduct").value;
 
@@ -51,33 +51,38 @@ formularioEliminar.addEventListener("submit", (e) => {
 
 // Manejar el evento submit del formulario de agregar
 const formularioAgregar = document.getElementById("formulario-agregar");
+ // // Escuchar eventos de Socket.io y actualizar la lista de productos
+ socket.on("productoAgregado", (producto) => {
+  agregarProductoALaTabla(producto);
+});
+
 formularioAgregar.addEventListener("submit", (e) => {
   e.preventDefault();
 
   // Obtener los valores ingresados por el usuario
-  const titulo = document.getElementById("titulo").value;
-  const descripcion = document.getElementById("descripcion").value;
-  const precio = parseFloat(document.getElementById("precio").value);
+  const title = document.getElementById("title").value;
+  const description = document.getElementById("description").value;
+  const price = parseFloat(document.getElementById("price").value);
   const stock = parseInt(document.getElementById("stock").value);
-  const codigo = document.getElementById("codigo").value;
+  const code = document.getElementById("code").value;
   const category = document.getElementById("category").value;
   const status = document.getElementById("status").value;
 
   // Validar que los campos no estén vacíos
-  if (!titulo || !descripcion || isNaN(precio) || isNaN(stock) || !codigo) {
+  if (!title || !description || isNaN(price) || isNaN(stock) || !code) {
     alert("Por favor, complete todos los campos.");
     return;
   }
 
   // Crear un objeto que representa el nuevo producto
   const nuevoProducto = {
-    title: titulo,
-    description: descripcion,
-    price: precio,
-    stock: stock,
-    code: codigo,
-    category: category,
-    status: status,
+    title,
+    description,
+    price,
+    stock,
+    code,
+    category,
+    status,
   };
 
   // Enviar el nuevo producto al servidor mediante Socket.io
@@ -86,21 +91,19 @@ formularioAgregar.addEventListener("submit", (e) => {
   // Limpiar los campos del formulario después de agregar el producto
   formularioAgregar.reset();
 
-  // // Escuchar eventos de Socket.io y actualizar la lista de productos
-  socket.on("productoAgregado", (producto) => {
-    agregarProductoALaTabla(producto);
-  });
+ 
 });
 
-const formularioMensaje = document.getElementById("formulario-mensaje");
-formularioMensaje.addEventListener("submit", (e) => {
-  e.preventDefault();
+// Chat 
+// const formularioMensaje = document.getElementById("formulario-mensaje");
+// formularioMensaje.addEventListener("submit", (e) => {
+//   e.preventDefault();
 
-  const usuario = document.getElementById("usuario").value;
-  const mensaje = document.getElementById("mensaje").value;
+//   const usuario = document.getElementById("usuario").value;
+//   const mensaje = document.getElementById("mensaje").value;
 
-  const newMessage = {
-    user: usuario,
-    message: mensaje,
-  };
-});
+//   const newMessage = {
+//     user: usuario,
+//     message: mensaje,
+//   };
+// });

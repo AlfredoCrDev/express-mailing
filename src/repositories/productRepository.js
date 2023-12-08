@@ -92,9 +92,17 @@ async findProductsByName(productName) {
 
   async deleteProduct(productId) {
     try {
-      const result = await productModel.deleteOne({_id: productId});
-      return result;
+      const productToDelete = await productModel.findOne({_id: productId});
+      
+      if (!productToDelete) {
+        // Producto no encontrado
+      throw new Error("Producto no encontrado.");
+    }
+    
+    const result = await productModel.deleteOne({ _id: productId });
+    return result
     } catch (error) {
+      console.error(error);
       throw new Error(`Error en ProductRepository.deleteProduct: ${error.message}`);
     }
   }

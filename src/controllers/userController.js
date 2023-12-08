@@ -76,7 +76,7 @@ async createUser(req, res) {
     const userEmail = req.params.id;
     try {
       const result = await userService.deleteUser(userEmail);
-      res.json({ message: 'User deleted successfully', result });
+      res.json({ status:"success", message: 'User deleted successfully', result });
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

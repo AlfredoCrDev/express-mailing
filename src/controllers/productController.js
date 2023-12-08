@@ -26,6 +26,7 @@ class ProductController {
 
 async createProduct(req, res) {
   const { title, description, price, stock, category, code } = req.body;
+  console.log("req.body", req.body);
   
   try {
     // Verificar si el producto existe
@@ -59,10 +60,16 @@ async createProduct(req, res) {
   async deleteProduct(req, res) {
     const productId = req.params.pid;
     try {
-      const product = await productService.deleteProduct(productId);
-      res.json({ message: 'Product deleted successfully', product });
+
+      const deletedProduct = await productService.deleteProduct(productId);
+      if(deletedProduct.deletedCount > 0){
+        res.status(200).json({ status: "success", deletedProduct });
+      } else {
+        res.status(400).json({ status: "error", message: "Error al eliminar el porducto"})
+      }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.error(error);
+      res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
     }
   }
 }

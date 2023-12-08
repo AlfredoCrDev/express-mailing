@@ -51,7 +51,13 @@ async function updateProduct(productId, productData) {
 
 // Función para eliminar un producto
 async function deleteProduct(productId) {
-  return productRepository.deleteProduct(productId);
+  try {
+    const result = await productRepository.deleteProduct(productId);
+    return result
+  } catch (error) {
+    // Manejar otros errores
+    throw new Error(`Error en ProductService.deleteProduct: ${error.message}`);
+  }
 }
 
 module.exports = {
