@@ -166,7 +166,6 @@ function eliminarProductoDeLaTabla(productId) {
 
 // Manejar el evento submit del formulario de eliminar
 const formularioEliminar = document.getElementById("formulario-eliminar");
-
 if (formularioEliminar) {
   formularioEliminar.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -196,42 +195,55 @@ if (formularioEliminar) {
 
 // Manejar el evento submit del formulario de agregar
 const formularioAgregar = document.getElementById("formulario-agregar");
+if(formularioAgregar){
+  formularioAgregar.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    // Obtener los valores ingresados por el usuario
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("description").value;
+    const price = parseFloat(document.getElementById("price").value);
+    const stock = parseInt(document.getElementById("stock").value);
+    const code = document.getElementById("code").value;
+    const category = document.getElementById("category").value;
+    const status = document.getElementById("status").value;
+    // Validar que los campos no estén vacíos
+    if (!title || !description || isNaN(price) || isNaN(stock) || !code) {
+      alert("Por favor, complete todos los campos.");
+      return;
+    }
+    // Crear un objeto que representa el nuevo producto
+    const nuevoProducto = {
+      title,
+      description,
+      price,
+      stock,
+      code,
+      category,
+      status,
+    };
 
-formularioAgregar.addEventListener("submit", (e) => {
-  e.preventDefault();
+    const response = await fetch(`/products/addproduct`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify( nuevoProducto )
+    });
+    const data = await response.json()
+    if (response.ok) {
+      agregarProductoALaTabla(data.product)
+      alert("Producto agregado con éxito");
+      formularioAgregar.reset();
+      window.location.reload();
+    } else {
+      // Error al eliminar el producto
+      console.error("Error al agregar el producto");
+      alert("Error al agregar el producto");
+    }
+    // Limpiar los campos del formulario después de agregar el producto
+    formularioAgregar.reset();
+  
+  });
 
-  // Obtener los valores ingresados por el usuario
-  const title = document.getElementById("title").value;
-  const description = document.getElementById("description").value;
-  const price = parseFloat(document.getElementById("price").value);
-  const stock = parseInt(document.getElementById("stock").value);
-  const code = document.getElementById("code").value;
-  const category = document.getElementById("category").value;
-  const status = document.getElementById("status").value;
-
-  // Validar que los campos no estén vacíos
-  if (!title || !description || isNaN(price) || isNaN(stock) || !code) {
-    alert("Por favor, complete todos los campos.");
-    return;
-  }
-
-  // Crear un objeto que representa el nuevo producto
-  const nuevoProducto = {
-    title,
-    description,
-    price,
-    stock,
-    code,
-    category,
-    status,
-  };
-
-
-
-  // Limpiar los campos del formulario después de agregar el producto
-  formularioAgregar.reset();
-
-});
+}
 
 // Chat 
 // const formularioMensaje = document.getElementById("formulario-mensaje");

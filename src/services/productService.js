@@ -24,15 +24,20 @@ async function getProductByCode(codeProduct) {
 
 // Función para crear un nuevo producto
 async function createProduct({ title, description, price, stock, category, code }) {
-  const newProduct = {
-    title,
-    description,
-    price,
-    stock,
-    category,
-    code,
-  };
-  return productRepository.createProduct(newProduct);
+  try {
+    const newProduct = {
+      title,
+      description,
+      price,
+      stock,
+      category,
+      code,
+    };
+    const product = productRepository.createProduct(newProduct); 
+    return product
+  } catch (error) {
+    throw new Error(`Error in ProductService.createProduct: ${error.message}`);
+  }
 }
 
 // Función para actualizar un producto

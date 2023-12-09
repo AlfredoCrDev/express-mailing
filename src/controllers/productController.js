@@ -25,20 +25,15 @@ class ProductController {
   }
 
 async createProduct(req, res) {
-  const { title, description, price, stock, category, code } = req.body;
-  console.log("req.body", req.body);
-  
+  const { title, description, price, stock, category, code } = req.body;  
   try {
     // Verificar si el producto existe
     const productExists = await productService.getProductByCode(code);
-    
     if (productExists) {
       return res.status(400).json({ status: "error", message: `El código ${code} ya esta siendo utilizado` });
     }
-
-    // Crear el producto si el código no está en uso
     const product = await productService.createProduct({ title, description, price, stock, category, code });    
-    res.json({ status: "success", product });
+    res.status(200).json({ status: "success", product });
   } catch (error) {
     console.log("Error al crear al el producto: ", error);
     res.status(400).json({ status: "error", message: error.message });
