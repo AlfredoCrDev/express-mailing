@@ -33,9 +33,19 @@ class UserController {
   }
 
   async getUserByEmail(req, res) {
-    const userEmail = req.params.id;
+    const userEmail = req.params.email;
     try {
       const user = await userService.getUserByEmail(userEmail);
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  async getUserById(req, res) {
+    const userId = req.params.uid;
+    try {
+      const user = await userService.getUserById(userId);
       res.json(user);
     } catch (error) {
       res.status(500).json({ error: error.message });

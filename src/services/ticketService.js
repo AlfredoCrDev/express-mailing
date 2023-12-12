@@ -1,8 +1,14 @@
-const ticketRepository = require('../repositories/ticketRepository');
+const ticketModel = require('../models/ticket.model');
 
 class TicketService {
-  async generateTicket(code, amount, purchaser) {
-    return await ticketRepository.createTicket(code, amount, purchaser);
+  async createTicket(ticketData) {
+    try {
+      const ticket = new ticketModel(ticketData);
+      const savedTicket = await ticket.save();
+      return savedTicket;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

@@ -20,6 +20,16 @@ class UserRepository {
     }
   }
 
+  async getUserById(userId) {
+    try {
+      const user = await userModel.findOne({_id: userId});
+      console.log(user);
+      return user || null
+    } catch (error) {
+      throw new Error(`Error en UserRepository.getUserById: ${error.message}`);
+    }
+  }
+
 
   async createUser(userData) {
     try {

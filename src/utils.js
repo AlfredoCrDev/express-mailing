@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const passport = require("passport")
+const { v4: uuidv4 } = require('uuid');
 // const config = require("./config/config")
 
 /* 
@@ -88,6 +89,19 @@ const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
 
 const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password)
 
+const generateUniqueCode = () => {
+  return uuidv4();
+}
+
+function calculateTotal(cartProducts) {
+  let total = 0;
+  for (const product of cartProducts) {
+      // Suponiendo que cada producto tiene un campo de 'price'
+      total += product.price * product.quantity;
+  }
+  return total;
+}
+
 module.exports = {
   createHash,
   isValidPassword,
@@ -96,5 +110,7 @@ module.exports = {
   passportCall,
   authorization,
   isAdmin,
-  isUser
+  isUser,
+  generateUniqueCode,
+  calculateTotal
 }

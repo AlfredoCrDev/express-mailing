@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const ticketCollecion = "products"
+const ticketCollecion = "tickets"
 
 const ticketSchema = new mongoose.Schema({
   code: {type: String, max: 30, unique: true, required: true},

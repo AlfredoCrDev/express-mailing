@@ -16,6 +16,10 @@ async function getUserByEmail(userEmail) {
   return userRepository.getUserByEmail(userEmail);
 }
 
+async function getUserById(userId) {
+  return userRepository.getUserById(userId);
+}
+
 // Función para crear un nuevo usuario
 async function createUser({ first_name, last_name, email, age, password, rol }) {
   const newUser = {
@@ -49,5 +53,6 @@ module.exports = {
   getUserByEmail,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  getUserById
 };

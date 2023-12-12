@@ -7,7 +7,8 @@ const userController = new UserController();
 // APIs
 router.get('/', userController.getAllUsers);
 router.get('/userinfo', utils.authToken, userController.getUserInfo);
-router.get('/:id', userController.getUserByEmail);
+router.get("/byid/:uid", userController.getUserById)
+router.get('/email/:email', userController.getUserByEmail);
 router.post('/register', userController.createUser);
 router.post('/login', userController.loginUser);
 router.put('/:id', userController.updateUser);
