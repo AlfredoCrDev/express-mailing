@@ -92,6 +92,7 @@ async findProductsByName(productName) {
 
   async updateStock(productId, newStock) {
     try {
+
       const existingProduct = await productModel.findOne({_id: productId});
 
     if (!existingProduct) {
@@ -101,19 +102,19 @@ async findProductsByName(productName) {
       };
     }
 
-    // Restar la cantidad comprada del stock del producto
-    existingProduct.stock -= newStock; // Asegúrate de ajustar el nombre de la propiedad según tu modelo
-
     // Guardar la actualización en la base de datos
-    await existingProduct.save();
+    const updateData = await productModel.updateOne(
+      { _id: existingProduct._id },
+      { $set: { stock: newStock.stock } }
+    );
 
     return {
       success: true,
       message: "Producto modificado correctamente",
-      updatedProduct: existingProduct, // Puedes devolver el producto actualizado si es necesario
+      updatedProduct: updateData, // Puedes devolver el producto actualizado si es necesario
     };
     } catch (error) {
-      throw new Error(`Error en ProductRepository.updateProduct: ${error.message}`);
+      throw new Error(`Error en ProductRepository.updateStock: ${error.message}`);
     }
   }
 

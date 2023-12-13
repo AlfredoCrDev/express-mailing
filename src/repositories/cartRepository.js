@@ -136,6 +136,28 @@ class CarRepository {
     }
   }
   
+  async clearCart(cartId) {
+    try {
+      const cart = await cartModel.findOne({ _id: cartId });
+      if (!cart) {
+        return {
+          success: false,
+          message: `No existe un carrito con el Id ${cartId}`,
+        };
+      }
+
+      // Limpieza del array de productos
+      cart.products = []
+      // Guardar el carrito actualizado en la base de datos
+      await cart.save();
+      return {
+        success: true,
+        message: "Productos eliminados del carrito",
+      };
+    } catch (error) {
+      throw new Error(`Error in CartRepository.clearCart: ${error.message}`);
+    }
+  }
   
 
 async deteleCart(cartId){
@@ -182,8 +204,6 @@ async updateCartItemQuantity(cartId, productId, newQuantity) {
     };
   }
 }
-
 }
-
 
 module.exports = CarRepository

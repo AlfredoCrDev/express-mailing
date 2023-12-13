@@ -65,6 +65,20 @@ async function removeProductFromCart(cartId, productId) {
   }
 }
 
+async function clearCart(cartId) {
+  try {
+    const result = await cartRepository.clearCart(cartId);
+
+    if (result.success) {
+      return { success: true, message: "Productos eliminados del carrito" };
+    } else {
+      return { success: false, message: result.message };
+    }
+  } catch (error) {
+    throw new Error(`Error in CartService.clearCart: ${error.message}`);
+  }
+}
+
 async function deleteCart(cartId){
   try {
     const cart = await cartRepository.deteleCart(cartId)
@@ -101,5 +115,6 @@ module.exports = {
   addProductToCart,
   removeProductFromCart,
   deleteCart,
-  updateCartItemQuantity
+  updateCartItemQuantity,
+  clearCart
 }

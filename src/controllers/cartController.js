@@ -144,16 +144,16 @@ async purcharseCart(req, res) {
         products: productsToPurchase,
       };
       const createdTicket = await ticketService.createTicket(ticketData);
-      // Actualizar el stock de cada producto comprado
-      for (const productToPurchase of productsToPurchase) {
-        const updateProduct = await productService.updateProduct(
-          productToPurchase.productId,
-          { stock: productToPurchase.stock - productToPurchase.quantity }
-        );
 
-        console.log("Resta de stock:", updateProduct.stock);
-        console.log("ID del producto:", productToPurchase.productId);
-      }
+      // Actualizar el stock de cada producto comprado en paralelo
+      const updatePromises = productsToPurchase.map(async (productToPurchase) => {
+        const newStock = productToPurchase.stock - productToPurchase.quantity;
+        return productService.updateStock(productToPurchase.productId, { stock: newStock });
+      });
+      // Esperar que todas las promesas se cumplan
+      await Promise.all(updatePromises);
+      // Vaciar carrtio
+      await cartService.clearCart(cartId);
 
       res.status(200).json({
         message: 'Compra realizada con éxito',
