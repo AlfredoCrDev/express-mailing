@@ -38,49 +38,6 @@ app.use(express.static(path.join(__dirname, "public")));
 // Ejecutando funcion de conexion a la Base de datos
 connectDB();
 
-// Websockect
-const http = require("http");
-const socketIo = require("socket.io");
-const { Server } = require("socket.io");
-const server = http.createServer(app);
-const io = new Server(server);
-global.io = io;
-
-/************  SOCKET.IO *******************/
-io.on("connection", (socket) => {
-  console.log("Cliente conectado a Socket.io");
-
-  socket.on("agregarProducto", async (nuevoProducto) => {
-    console.log("Nuevo producto: ", nuevoProducto);
-    const newP = {
-      title: nuevoProducto.title,
-      description: nuevoProducto.descripcion,
-      price: nuevoProducto.price,
-      stock: nuevoProducto.stock,
-      code: nuevoProducto.code,
-      category: nuevoProducto.category,
-      status: nuevoProducto.status,
-    };
-    const newProducto = await productController.createProduct(newP);
-
-    // Emitiendo un evento para actualizar la lista en el cliente.
-    io.emit("productoAgregado", newProducto);
-  });
-
-  socket.on("eliminarProducto", async (productoId) => {
-    await productController.deleteProduct(productoId);
-
-    // Emitiendo un evento para actualizar la lista en el cliente.
-    io.emit("productoEliminado", productoId);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Cliente desconectado de Socket.io");
-  });
-});
-/************  FIN SOCKET.IO *******************/
-
-
 const PORT = process.env.PORT
 
 app.use(express.json());
@@ -97,6 +54,6 @@ app.use("/", vistasRouter)
 app.use("/", mailRouter)
 
 
-server.listen(PORT, ()=>{
+app.listen(PORT, ()=>{
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 })
