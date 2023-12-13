@@ -65,6 +65,14 @@ async function deleteProduct(productId) {
   }
 }
 
+async function updateStock(productId, newStock){
+  try {
+    return await productRepository.updateStock(productId, newStock)
+  } catch (error) {
+    throw new Error(`Error en ProductService.updateStock: ${error.message}`);
+  }
+}
+
 module.exports = {
   getAllProducts,
   findProductsByName,

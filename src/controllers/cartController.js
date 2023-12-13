@@ -1,6 +1,7 @@
 const cartService = require('../services/cartService.js');
 const ticketService = require("../services/ticketService.js")
 const userService = require("../services/userService.js")
+const productService = require("../services/productService.js")
 const utils = require("../utils.js")
 
 class CartController {
@@ -116,51 +117,51 @@ async purcharseCart(req, res) {
     }
 
     const productsToPurchase = [];
-    const productsNotPurchased = [];
 
     products.forEach((item) => {
       const {product} = item;
       if (product.stock >= item.quantity) {
-        // Restar la cantidad comprada del stock del producto
-        product.stock -= item.quantity;
         productsToPurchase.push({
           productId: product._id,
           quantity: item.quantity,
+          price: product.price,
+          stock: product.stock
         });
-      } else {
-        productsNotPurchased.push(item.productId);
       }
     });
+
+
+    const code = utils.generateUniqueCode()
+    const totalCompra = utils.calculateTotal(productsToPurchase)
 
     // Realizar la compra solo si hay productos para comprar
     if (productsToPurchase.length > 0) {
       // Crear un ticket con los datos de la compra
       const ticketData = {
-        code: utils.generateUniqueCode(), // Puedes generar un código único aquí
-        amount: utils.calculateTotal(productsToPurchase),
+        code: code,
+        amount: totalCompra,
         purchaser: user.email,
         products: productsToPurchase,
       };
+      const createdTicket = await ticketService.createTicket(ticketData);
+      // Actualizar el stock de cada producto comprado
+      for (const productToPurchase of productsToPurchase) {
+        const updateProduct = await productService.updateProduct(
+          productToPurchase.productId,
+          { stock: productToPurchase.stock - productToPurchase.quantity }
+        );
 
-    const createdTicket = await ticketService.createTicket(ticketData);
+        console.log("Resta de stock:", updateProduct.stock);
+        console.log("ID del producto:", productToPurchase.productId);
+      }
 
-      // Filtrar los productos que no pudieron comprarse
-      const productsRemaining = cart.items.filter((item) =>
-      productsNotPurchased.some((notPurchased) => notPurchased.equals(item.productId))
-    );
-
-    // Actualizar el carrito con los productos restantes
-    cart.items = productsRemaining;
-    await cart.save();
-
-    res.status(200).json({
-      message: 'Compra realizada con éxito',
-      ticket: createdTicket,
-      productsNotPurchased: productsNotPurchased.map((product) => product.toString()),
-    });
-  } else {
-    res.status(400).json({ error: 'Ningún producto disponible para la compra' });
-  }
+      res.status(200).json({
+        message: 'Compra realizada con éxito',
+        ticket: createdTicket,
+      });
+    } else {
+      res.status(400).json({ error: 'Ningún producto disponible para la compra' });
+    }
   } catch (error) {
     console.error("Error en CartController.purcharseCart", error);
     res.status(500).json({ status: 'error', message: 'Error interno del servidor' });

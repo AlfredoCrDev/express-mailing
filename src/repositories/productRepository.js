@@ -90,6 +90,33 @@ async findProductsByName(productName) {
     }
   }
 
+  async updateStock(productId, newStock) {
+    try {
+      const existingProduct = await productModel.findOne({_id: productId});
+
+    if (!existingProduct) {
+      return {
+        success: false,
+        message: `No se encontró un producto con el ID: ${productId}`,
+      };
+    }
+
+    // Restar la cantidad comprada del stock del producto
+    existingProduct.stock -= newStock; // Asegúrate de ajustar el nombre de la propiedad según tu modelo
+
+    // Guardar la actualización en la base de datos
+    await existingProduct.save();
+
+    return {
+      success: true,
+      message: "Producto modificado correctamente",
+      updatedProduct: existingProduct, // Puedes devolver el producto actualizado si es necesario
+    };
+    } catch (error) {
+      throw new Error(`Error en ProductRepository.updateProduct: ${error.message}`);
+    }
+  }
+
   async deleteProduct(productId) {
     try {
       const productToDelete = await productModel.findOne({_id: productId});
