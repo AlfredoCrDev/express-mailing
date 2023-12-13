@@ -7,7 +7,7 @@
   <title>Produtos</title>
 </head>
 
-<body>
+<body data-cart="{{cart}}">
   <h1 class="tituloProducto">Lista de Productos</h1>
   <h4 class="tituloProducto">Bienvenido: {{email}}</h4>
   <h4 class="tituloProducto">Rol: {{rol}}</h4>
@@ -24,8 +24,8 @@
       <p class="product-description">{{this.description}}</p>
       <p class="product-price">$ {{this.price}}</p>
       {{!-- <a href="/products/{{this._id}}" target="_blank"><button type="submit">Ver más...</button></a>--> --}}
-      {{!-- <button class="add-to-cart-button" data-product-id="{{this._id}}">Agregar al carrito</button> --}}
-      <a href="/cart?656e3592abdb128a0abca752&product={{this._id}}" class="add-to-cart-link">Agregar al carrito</a>
+      <button class="add-to-cart-button" data-product-id="{{this._id}}">Agregar al carrito</button>
+      {{!-- <a href="/cart/{{../cart}}/product={{this._id}}" class="add-to-cart-link">Agregar al carrito</a> --}}
     </div>
     {{/each}}
   </div>

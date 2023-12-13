@@ -3,6 +3,7 @@ const router = express.Router();
 const utils = require("../utils");
 const ProductController = require('../repositories/productRepository');
 const productController = new ProductController();
+const cartService = require("../services/cartService")
 
 // VISTAS
 
@@ -80,6 +81,19 @@ router.get("/createProducts", utils.passportCall("jwt"), utils.isAdmin, async(re
     res.status(500).send("Error interno del servidor");
   }
 })
+
+
+router.get("/carrito/:cid", async (req, res) => {
+  const cartId = req.params.cid;
+  try {
+    const productsInTheCart = await cartService.getCartById(cartId)
+    
+    res.render("cartView", { productsInTheCart })
+  } catch (error) {
+    console.error("Error al obtener el carrito", error);
+    res.status(500).send({ message: "Error al obtener el carrito" });
+  }
+});
 
 
 

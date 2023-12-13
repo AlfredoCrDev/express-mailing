@@ -245,6 +245,65 @@ if(formularioAgregar){
 
 }
 
+const addToCartButtons = document.querySelectorAll('.add-to-cart-button');
+  if(addToCartButtons){
+    const cartId = document.body.getAttribute('data-cart');
+
+    addToCartButtons.forEach(function(button) {
+      button.addEventListener('click', async function(event) {
+        event.preventDefault();
+
+        const productId = this.getAttribute('data-product-id');
+
+        // Realizar la petición POST usando Fetch
+        const response = await fetch(`/cart/${cartId}/product/${productId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // body: JSON.stringify({}),
+        })
+        if (response.ok) {
+          alert("Producto agregado al carrito");
+        } else {
+          console.error("Error al agregar el producto");
+          alert("Error al agregar el producto");
+        }
+      })
+    });
+  }
+
+const cartTotalElement = document.getElementById('cartTotal')
+  if(cartTotalElement){
+    function calculateProductTotals() {
+      const productTotalElements = document.querySelectorAll('.product-total');
+      const productTotals = [];
+
+      productTotalElements.forEach(element => {
+        const quantity = element.getAttribute('data-quantity');
+        const price = element.getAttribute('data-price');
+        const total = quantity * price;
+        productTotals.push(total);
+        element.innerText = `${total.toFixed(2)}`
+      });
+
+      return productTotals;
+    }
+
+    // Función para calcular el total del carrito
+    function calculateCartTotal() {
+      const productTotals = calculateProductTotals();
+      const cartTotal = productTotals.reduce((sum, total) => sum + total, 0);
+      return cartTotal;
+    }
+
+    cartTotalElement.innerText = calculateCartTotal();
+
+  }
+    
+
+
+
 // Chat 
 // const formularioMensaje = document.getElementById("formulario-mensaje");
 // formularioMensaje.addEventListener("submit", (e) => {
