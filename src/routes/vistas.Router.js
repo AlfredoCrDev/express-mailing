@@ -82,7 +82,7 @@ router.get("/createProducts", utils.passportCall("jwt"), utils.isAdmin, async(re
 })
 
 
-router.get("/carrito/:cid", async (req, res) => {
+router.get("/carrito/:cid", utils.passportCall("jwt"), utils.isUser, async (req, res) => {
   const cartId = req.params.cid;
   try {
     const productsInTheCart = await cartService.getCartById(cartId)
