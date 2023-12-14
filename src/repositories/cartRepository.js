@@ -86,9 +86,6 @@ class CarRepository {
     // Guardar el carrito actualizado en la base de datos
     await cart.save();
 
-    // Guardar el carrito actualizado en la base de datos
-    await cart.save();
-
     return {
       success: true,
       message: "Producto agregado al carrito",

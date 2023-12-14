@@ -51,7 +51,7 @@ class CartController {
       if (result.success) {
         res.status(200).json(result);
       } else {
-        res.status(400).json(result);
+        res.status(400).json({error: result.message});
       }
     } catch (error) {
       res.status(500).json({ success: false, message: "Error al agregar producto al carrito" });
@@ -113,7 +113,7 @@ async purcharseCart(req, res) {
     const products = cart.carrito.products
     const user = await userService.getUserById(cart.carrito.user)
     if (!cart) {
-      return res.status(404).json({ error: 'Carrito no encontrado' });
+      return res.status(404).json({ error: result.message });
     }
 
     const productsToPurchase = [];
@@ -156,11 +156,12 @@ async purcharseCart(req, res) {
       await cartService.clearCart(cartId);
 
       res.status(200).json({
+        status: "success",
         message: 'Compra realizada con éxito',
         ticket: createdTicket,
       });
     } else {
-      res.status(400).json({ error: 'Ningún producto disponible para la compra' });
+      res.status(400).json({ error: 'Error al realizar la compra' });
     }
   } catch (error) {
     console.error("Error en CartController.purcharseCart", error);

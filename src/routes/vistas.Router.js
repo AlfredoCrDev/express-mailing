@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const utils = require("../utils");
-const ProductController = require('../repositories/productRepository');
-const productController = new ProductController();
+const ProductRepository = require("../repositories/productRepository");
+const productRepository = new ProductRepository();
 const cartService = require("../services/cartService")
 
 // VISTAS
-
 router.get("/register", async(req, res) => {
   try {
     
@@ -37,19 +36,19 @@ router.get("/profile", utils.passportCall("jwt"), utils.isAdmin, async(req, res)
   }
 })
 
-const allowedRoles = ["usuario", "admin"];
-router.get("/products", utils.passportCall("jwt"), utils.authorization(allowedRoles), async(req, res) => {
+// const allowedRoles = ["usuario", "admin"];
+router.get("/products", utils.passportCall("jwt"), utils.isUser, async(req, res) => {
   try {
     const user = req.user.user;
     if(!user){
       console.log("No esta autorizado");
       return res.redirect("/")
     }
-    const { limit = 10 , page = 1} = req.query;
-
-    const products = await productController.getAllProducts(limit, page,)
+    const { limit = 10 , page = 1 } = req.query;
+    // const limit = 10
+    // const page = 1
+    const products = await productRepository.getAllProducts(limit, page)
     const cartId = user.cart
-
     res.render("productos", { 
       title: "Lista de productos",
       products: products,

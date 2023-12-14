@@ -177,7 +177,6 @@ if (formularioEliminar) {
       headers: { "Content-Type": "application/json" },
       // body: JSON.stringify({ productId })
     });
-    console.log(response);
     if (response.ok) {
       eliminarProductoDeLaTabla(productId);
       alert("Producto eliminado con éxito");
@@ -254,8 +253,8 @@ const addToCartButtons = document.querySelectorAll('.add-to-cart-button');
         event.preventDefault();
 
         const productId = this.getAttribute('data-product-id');
-
-        // Realizar la petición POST usando Fetch
+        try {
+            // Realizar la petición POST usando Fetch
         const response = await fetch(`/cart/${cartId}/product/${productId}`, {
           method: 'POST',
           headers: {
@@ -263,12 +262,22 @@ const addToCartButtons = document.querySelectorAll('.add-to-cart-button');
           },
           // body: JSON.stringify({}),
         })
+        const data = await response.json();
+        console.log(data);
         if (response.ok) {
-          alert("Producto agregado al carrito");
+          // Verifica el mensaje en la respuesta
+          if (data.success) {
+            alert("Producto agregado al carrito");
+          } 
         } else {
           console.error("Error al agregar el producto");
-          alert("Error al agregar el producto");
+          alert(`Error: ${data.error}`);
         }
+        } catch (error) {
+          console.error("Error al realizar la solicitud:", error);
+          alert("Error al realizar la solicitud");
+        }
+      
       })
     });
   }
@@ -284,7 +293,7 @@ const cartTotalElement = document.getElementById('cartTotal')
         const price = element.getAttribute('data-price');
         const total = quantity * price;
         productTotals.push(total);
-        element.innerText = `${total.toFixed(2)}`
+        element.innerText = `${total}`
       });
 
       return productTotals;
@@ -300,8 +309,81 @@ const cartTotalElement = document.getElementById('cartTotal')
     cartTotalElement.innerText = calculateCartTotal();
 
   }
-    
 
+  const buttonBuy = document.getElementById('button-buy');
+  if (buttonBuy) {
+  buttonBuy.addEventListener('click', async function(event) {
+    event.preventDefault();
+
+    const cartId = this.getAttribute('data-cart-id');
+    try {
+      // Realizar la petición POST usando Fetch
+      const response = await fetch(`/cart/${cartId}/purchase`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify({}),
+      });
+      console.log("Responseeee", response);
+      // Verificar si la respuesta es exitosa
+      if (!response.ok) {
+        console.error("Error al realizar la compra");
+        alert("Error al realizar la compra");
+        return;
+      }
+
+      try {
+        // Intentar analizar la respuesta como JSON
+        const data = await response.json();
+        console.log(data);
+        // Verificar el éxito en la respuesta JSON
+        if (data.status === 'success') {
+          alert(`Felicidades: ${data.message} - 
+          Usuario: ${data.ticket.purchaser} - 
+          Código de compra: ${data.ticket.code} - 
+          Por un total de: ${data.ticket.amount}`);
+          window.location.href = '/products';
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error("Error al analizar la respuesta JSON:", error);
+        alert("Error al analizar la respuesta JSON");
+      }
+    } catch (error) {
+      console.error("Error al realizar la solicitud:", error);
+      alert("Error al realizar la solicitud");
+    }
+  });
+}
+
+  // FUNCION PARA IR A CARRITO CON BOTON 
+  // const goToCartButtons = document.querySelectorAll('.go-to-cart-button');
+  // if(goToCartButtons){
+  //   const cartId = document.body.getAttribute('data-cart');
+
+  //   goToCartButtons.forEach(function(button) {
+  //     button.addEventListener('click', async function(event) {
+  //       event.preventDefault();
+
+  //       // Realizar la petición POST usando Fetch
+  //       const response = await fetch(`/cart/${cartId}/`, {
+  //         method: 'GET',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         // body: JSON.stringify({}),
+  //       })
+  //       if (response.ok) {
+  //         window.location.assign(`/carrito/${cartId}`);;
+  //       } else {
+  //         console.error("Error al mostrar el carrito");
+  //         alert("Error al mostrar el carrito");
+  //       }
+  //     })
+  //   });
+  // }
 
 
 // Chat 

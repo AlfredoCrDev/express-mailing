@@ -10,6 +10,8 @@
   <h1 class="tituloProducto">Carrito de Compras</h1>
   <p class="idCarrito">Identificador de carrito:</p>
   <p class="idCarrito"><strong>{{productsInTheCart.carrito._id}}</strong></p>
+  <a href="/products">Volver a los productos</a></br>
+
   <div class="cart-container">
     <ul>
       {{#each productsInTheCart.carrito.products}}
@@ -23,6 +25,8 @@
     </ul>
   </div>
   <p class="cart-total">Total del carrito: $<span id="cartTotal"></span></p>
+  <button class="button-buy" id="button-buy" data-cart-id="{{productsInTheCart.carrito._id}}">Procesar Compra</button>
+
   <script src="/js/client.js"></script>
 
 </body>

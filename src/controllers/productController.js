@@ -4,8 +4,8 @@ const passport = require("passport")
 
 class ProductController {
   async getAllProducts(req, res) {
-    const { limit, page, sort, status, category } = req.query
     try {
+      const { limit = 10 , page = 1 , sort, status, category } = req.query;
       const result = await productService.getAllProducts( {limit, page, sort, status, category} );
       res.json(result);
     } catch (error) {
@@ -39,7 +39,6 @@ async createProduct(req, res) {
     res.status(400).json({ status: "error", message: error.message });
   }
 }
-
 
   async updateProduct(req, res) {
     try {

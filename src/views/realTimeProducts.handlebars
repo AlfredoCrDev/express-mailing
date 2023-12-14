@@ -1,42 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
 </head>
+
 <body>
-    
+
     <h1>Lista de Productos en tiempo Real</h1>
+    <a href="/profile">Volver al perfil</a></br>
+    <div class="go-to-logout-products">
+        <button id="logoutButton">Cerrar Sesión</button>
+    </div>
+    <!-- Formulario para agregar un producto -->
+    <form id="formulario-agregar">
+        <h2>Agregar Producto</h2>
+        <label for="titulo">Título:</label>
+        <input type="text" id="title" name="titulo" required>
 
-<!-- Formulario para agregar un producto -->
-<form id="formulario-agregar">
-    <h2>Agregar Producto</h2>
-    <label for="titulo">Título:</label>
-    <input type="text" id="title" name="titulo" required>
+        <label for="descripcion">Descripción:</label>
+        <input type="text" id="description" name="descripcion" required>
 
-    <label for="descripcion">Descripción:</label>
-    <input type="text" id="description" name="descripcion" required>
+        <label for="precio">Precio:</label>
+        <input type="number" id="price" name="precio" required>
 
-    <label for="precio">Precio:</label>
-    <input type="number" id="price" name="precio" required>
+        <label for="stock">Stock:</label>
+        <input type="number" id="stock" name="stock" required>
 
-    <label for="stock">Stock:</label>
-    <input type="number" id="stock" name="stock" required>
+        <label for="codigo">Código:</label>
+        <input type="text" id="code" name="codigo" required>
 
-    <label for="codigo">Código:</label>
-    <input type="text" id="code" name="codigo" required>
+        <label for="category">Categoria:</label>
+        <input type="text" id="category" name="category" required>
 
-    <label for="category">Categoria:</label>
-    <input type="text" id="category" name="category" required>
+        <label for="status">Status:</label>
+        <input type="text" id="status" name="status" required>
 
-    <label for="status">Status:</label>
-    <input type="text" id="status" name="status" required>
+        <button type="submit">Agregar Producto</button>
+    </form>
 
-    <button type="submit">Agregar Producto</button>
-</form>
-
-<table>
+    <table>
         <thead>
             <tr>
                 <th>ID</th>
@@ -52,17 +57,17 @@
         </thead>
         <tbody>
             {{#each productos.docs}}
-                <tr>
-                    <td>{{this._id}}</td>
-                    <td>{{this.title}}</td>
-                    <td>{{this.description}}</td>
-                    <td>$ {{this.price}}</td>
-                    <td>{{this.stock}}</td>
-                    <td>{{this.code}}</td>
-                    <td>{{this.thumbail}}</td>
-                    <td>{{this.category}}</td>
-                    <td>{{this.status}}</td>
-                </tr>
+            <tr>
+                <td>{{this._id}}</td>
+                <td>{{this.title}}</td>
+                <td>{{this.description}}</td>
+                <td>$ {{this.price}}</td>
+                <td>{{this.stock}}</td>
+                <td>{{this.code}}</td>
+                <td>{{this.thumbail}}</td>
+                <td>{{this.category}}</td>
+                <td>{{this.status}}</td>
+            </tr>
             {{/each}}
         </tbody>
     </table>
@@ -74,8 +79,10 @@
         <button type="submit">Eliminar Producto</button>
     </form>
 
-{{!-- <script src="/socket.io/socket.io.js"></script> --}}
-<script src="/js/client.js"></script>
+    {{!--
+    <script src="/socket.io/socket.io.js"></script> --}}
+    <script src="/js/client.js"></script>
 
 </body>
+
 </html>

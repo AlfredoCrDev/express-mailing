@@ -12,10 +12,11 @@
   <h4 class="tituloProducto">Bienvenido: {{email}}</h4>
   <h4 class="tituloProducto">Rol: {{rol}}</h4>
   <h4 class="tituloProducto">Carrito: {{cart}}</h4>
-  <a href="/email">Enviar un mensaje</a>
+  {{!-- <button class="go-to-cart-button" data-product-id="{{this._id}}">Ir a Carrito</button> --}}
+  <a href="/email">Enviar un mensaje</a></br>
+  <a href="/carrito/{{cart}}">Ir a Carrito</a>
   <div class="go-to-logout-products">
     <button id="logoutButton">Cerrar Sesión</button>
-  </div><div class="go-to-logout-products">
   </div>
   <div class="container">
     {{#each products.docs}}

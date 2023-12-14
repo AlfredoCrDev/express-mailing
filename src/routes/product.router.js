@@ -5,7 +5,7 @@ const ProductController = require('../controllers/productController');
 const productController = new ProductController();
 
 // APIs
-router.get('/all', productController.getAllProducts);
+router.get('/api', productController.getAllProducts);
 router.post('/search', productController.findProductsByName);
 router.post('/addProduct', productController.createProduct);
 router.put('/update/:pid', productController.updateProduct);
