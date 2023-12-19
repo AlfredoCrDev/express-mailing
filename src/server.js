@@ -21,10 +21,12 @@ const productRoutes = require("./routes/product.router.js")
 const cartRouter = require("./routes/cart.router.js")
 const vistasRouter = require("./routes/vistas.Router.js")
 const mailRouter = require("./routes/mail.router.js")
+const loggerRouter = require("./routes/logger.router.js")
 
 // Passport
 const passport = require("passport")
-const initializaPassport = require("./config/passport.config")
+const initializaPassport = require("./config/passport.config");
+const loggerMiddleware = require("./loggerMiddleware.js");
 
 // Configuracion handlebars
 app.engine("handlebars", handlebars.engine());
@@ -47,11 +49,15 @@ app.use(cookieParser());
 initializaPassport()
 app.use(passport.initialize())
 
+app.use(loggerMiddleware)
+
 app.use("/users", userRoutes)
 app.use("/products", productRoutes)
 app.use("/cart", cartRouter)
 app.use("/", vistasRouter)
 app.use("/", mailRouter)
+app.use("/", loggerRouter)
+
 
 
 app.listen(PORT, ()=>{
