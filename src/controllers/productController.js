@@ -1,6 +1,5 @@
 const productService = require('../services/productService');
-const logger = require("../logger.js")
-
+// const logger = require("../logger.js")
 
 class ProductController {
   async getAllProducts(req, res) {
@@ -9,7 +8,7 @@ class ProductController {
       const result = await productService.getAllProducts( {limit, page, sort, status, category} );
       res.json(result);
     } catch (error) {
-      logger.error('Error en ProductController.getProducts:', error);
+      req.logger.error('Error en ProductController.getProducts:', error);
       res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
     }
   }
@@ -19,13 +18,13 @@ class ProductController {
     try {
       const products = await productService.findProductsByName(productName)
       if (!products || !products.length){
-        logger.warn(`No existe producto con el nombre ${productName}`)
+        req.logger.warn(`No existe producto con el nombre ${productName}`)
         return res.status(404).json({message:'No se encontraron productos con ese nombre.'})
         }
-      logger.info("Producto encontrado con éxito")
+      req.logger.info("Producto encontrado con éxito")
       res.json({ status: 'success', products});
     } catch (error) {
-      logger.error(`Error al buscar el producto por nombre ${productName}:`, error);
+      req.logger.error(`Error al buscar el producto por nombre ${productName}:`, error);
       res.status(500).json({ error: error.message });
     }
   }
@@ -36,18 +35,18 @@ async createProduct(req, res) {
     // Verificar si el producto existe
     const productExists = await productService.getProductByCode(code);
     if (productExists) {
-      logger.warn(`El codigo ${code} ya esta siendo utilizado`)
+      req.logger.warn(`El codigo ${code} ya esta siendo utilizado`)
       return res.status(400).json({ status: "error", message: `El código ${code} ya esta siendo utilizado` });
     }
     const product = await productService.createProduct({ title, description, price, stock, category, code }); 
     if(!product){
-      logger.warn("Faltan datos para crear el producto")
+      req.logger.warn("Faltan datos para crear el producto")
       throw new Error('Faltan datos para crear un producto')
     }
-    logger.info("Producto creado con éxito")
+    req.logger.info("Producto creado con éxito")
     res.status(200).json({ status: "success", product });
   } catch (error) {
-    logger.error("Error al crear al el producto: ", error);
+    req.logger.error("Error al crear al el producto: ", error);
     res.status(400).json({ status: "error", message: error.message });
   }
 }
@@ -58,13 +57,13 @@ async createProduct(req, res) {
       const productData = req.body;
       const updatedProduct = await productService.updateProduct(productId, productData);
       if (!updatedProduct) {
-        logger.warn(`No se ha podido actualizar el producto con id "${productId}"`);
+        req.logger.warn(`No se ha podido actualizar el producto con id "${productId}"`);
         return res.status(404).json({ message: "No se ha encontrado el producto" });
         }
-      logger.info(`Se ha actualizado correctamente el producto con id "${productId}"`);
+      req.logger.info(`Se ha actualizado correctamente el producto con id "${productId}"`);
       res.json(updatedProduct);
     } catch (error) {
-      logger.error(`Error al actualizar el producto con id "${productId}": `, error);
+      req.logger.error(`Error al actualizar el producto con id "${productId}": `, error);
       res.status(500).json({ error: error.message });
     }
   }
@@ -77,11 +76,11 @@ async createProduct(req, res) {
       if(deletedProduct.deletedCount > 0){
         res.status(200).json({ status: "success", deletedProduct });
       } else {
-        logger.warn("Error al tratar de eliminar el producto")
+        req.logger.warn("Error al tratar de eliminar el producto")
         res.status(400).json({ status: "error", message: "Error al eliminar el porducto"})
       }
     } catch (error) {
-      logger.error("Error al eliminar el producto: ", error);
+      req.logger.error("Error al eliminar el producto: ", error);
       res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
     }
   }

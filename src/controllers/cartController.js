@@ -3,7 +3,7 @@ const ticketService = require("../services/ticketService.js")
 const userService = require("../services/userService.js")
 const productService = require("../services/productService.js")
 const utils = require("../utils.js")
-const logger = require("../logger.js")
+// const logger = require("../logger.js")
 
 class CartController {
 
@@ -11,10 +11,10 @@ class CartController {
     try {
       const newCart = req.body
       const cart = await cartService.addNewCart(newCart)
-      logger.info("Carrito creado con éxito");
+      req.logger.info("Carrito creado con éxito");
       res.status(200).send({message: "Nuevo carrito creado", cart})
     } catch (error) {
-      logger.error("Error al enviar productos al carrito", error);
+      req.logger.error("Error al enviar productos al carrito", error);
       res.status(500).send({message: "Error al crear un nuevo carrito"})    
     }
   }
@@ -22,10 +22,10 @@ class CartController {
   async getAllCarts(req, res){
     try {
       const carts = await cartService.getAllCarts()
-      logger.info("Lista de carritos")
+      req.logger.info("Lista de carritos")
       res.status(200).send({ message: "Lista de carritos obtenida", carts})
     } catch (error) {
-      logger.error("Error al obtener los carritos")
+      req.logger.error("Error al obtener los carritos")
       res.status(500).send({message: "Error al obtener los carritos"})    
     }
   }
@@ -35,13 +35,13 @@ class CartController {
     try {
       const result = await cartService.getCartById(cartId);
       if (result.success) {
-        logger.info(`Información del carro ${cartId} obtenido correctamente`);
+        req.logger.info(`Información del carro ${cartId} obtenido correctamente`);
         return res.status(200).json(result);
       }  else {
         return res.status(404).json(result);
       }
     } catch (error) {
-      logger.error(`Error en el controlador getCartById: ${error}`);
+      req.logger.error(`Error en el controlador getCartById: ${error}`);
       res.status(500).send({message: "Error al obtener el carrtio por ID"})    
     }
   }
@@ -54,13 +54,13 @@ class CartController {
       const result = await cartService.addProductToCart(cartId, productId, quantity);
   
       if (result.success) {
-        logger.info("Producto agregado con éxito")
+        req.logger.info("Producto agregado con éxito")
         res.status(200).json(result);
       } else {
         res.status(400).json({error: result.message});
       }
     } catch (error) {
-      logger.error(`Error en el controlador addProductToCart: ${error}`)
+      req.logger.error(`Error en el controlador addProductToCart: ${error}`)
       res.status(500).json({ success: false, message: "Error al agregar producto al carrito" });
     }
   }
@@ -73,13 +73,13 @@ async removeProductFromCart(req, res) {
     const result = await cartService.removeProductFromCart(cartId, productId);
 
     if (result.success) {
-      logger.info(`Se ha eliminado el producto ${productId} del carro ${cartId}`);
+      req.logger.info(`Se ha eliminado el producto ${productId} del carro ${cartId}`);
       res.status(200).json(result);
     } else {
       res.status(400).json(result);
     }
   } catch (error) {
-    logger.error(`Error en el controlador removeProductFromCart: ${error}`);
+    req.logger.error(`Error en el controlador removeProductFromCart: ${error}`);
     res.status(500).json({ message: "Error al eliminar el producto del carrito" });
   }
 }
@@ -89,13 +89,13 @@ async deleteCart(req, res){
   try {
     const result = await cartService.deleteCart(cartId);
     if (result.success) {
-      logger.info(`Carro de compra ${cartId} eliminado correctamente`);
+      req.logger.info(`Carro de compra ${cartId} eliminado correctamente`);
       return res.status(200).json({message: "Cart deleted successfully"});
     }  else {
       return res.status(404).json(result);
     }
   } catch (error) {
-    logger.error(`Error en el controlador deleteCart: ${error}`);
+    req.logger.error(`Error en el controlador deleteCart: ${error}`);
     res.status(500).send({message: "Error al eliminar el carrtio por ID"})    
   }
 }
@@ -175,7 +175,7 @@ async purcharseCart(req, res) {
       res.status(400).json({ error: 'Error al realizar la compra' });
     }
   } catch (error) {
-    logger.error("Error en CartController.purcharseCart", error);
+    req.logger.error("Error en CartController.purcharseCart", error);
     res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
   }
 }
