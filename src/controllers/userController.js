@@ -1,7 +1,8 @@
 const userService = require('../services/userService');
 const utils = require("../utils")
 const passport = require("passport")
-// const logger = require("../logger")
+const nodemailer = require("nodemailer")
+
 
 class UserController {
   async getAllUsers(req, res) {
@@ -122,6 +123,106 @@ async createUser(req, res) {
     res.clearCookie('token'); // No funciona buscar manera de eliminar la cookie
     res.redirect('/');
   };
+
+  async forgotPassword (req,res) {
+    const {email} = req.body;
+    const user = await userService.getUserByEmail(email);
+    if(!user) {
+      req.logger.warn(`No existe usuario con el corre ${email}`)
+      return res.status(400).json({status:'error', msg:`El correo electronico "${email}"`})
+    }
+    let token = utils.generateToken(user);
+    const url = `http://localhost:3000/reset-password?token=${token}`;
+
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",  
+      auth: {
+          user: process.env.USER, 
+          pass: process.env.PASS 
+      }
+    });
+    const mailOptions = {
+      from: `"Recuperación de contraseña" <${process.env.GMAIL_USER}>`,
+      to: email,
+      subject: "Restablecer Contraseña",
+      text: `Haz clic en este enlace para restablecer tu contraseña:\n\n ${url}\n\n
+      Si no has solicitado un cambio de contraseña, puedes ignorar este mensaje.\n`,
+      html: `<p>Haz click en el siguiente enlace para restablecer tu contraseña:</p>
+      <a href="${url}">Cambiar mi contraseña</a>`
+    };
+
+    try {
+      const sendEmail = await transporter.sendMail
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            req.logger.warn("Error enviando email:", error);
+            res.status(500).json({ error: "Error al enviar el correo" });
+        } else {
+            req.logger.info("Correo para restablecer contraseña ha sido enviado");
+            res.status(200).json({ message: "Correo enviado con éxito", sendEmail });
+        }
+    });
+    } catch (error) {
+      req.logger.error('Error al enviar el correo:', error);
+      res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    }
+  }
+  async resetPassword(req,res) {
+    const {email} = req.body;
+    try{
+      const user = await userService.getByEmail(email);
+      if(!user) throw new Error('El usuario no existe')
+      const passwordResetToken = utils.generateToken({ email }, process.env.PASSWORD_RESET_SECRET,
+    parseInt(process.env.TOKENS_EXPIRATION));
+    const url = `${req.protocol}://${req.get('host')}/reset-password/${passwordResetToken}`;
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS
+        }
+        });
+        const mailOptions = {
+          from: `"Recuperación de contraseña" <${process.env.GMAIL_USER}>`,
+          to: email,
+          subject: "Restablecer Contraseña",
+          text: `Haz clic en este enlace para restablecer tu contraseña:\n\n ${url}\n\n
+          Si no has solicitado un cambio de contraseña, puedes ignorar este mensaje.\n`,
+          html: `<p>Haz click en el siguiente enlace para restablecer tu contraseña:</p>
+          <a href="${url}">Cambiar mi contraseña</a>`
+          };
+          const info = await transporter.sendMail(mailOptions);
+          console.log("Message sent: %s", info.messageId);
+          return res.status(204).json({msg:'Correo enviado'});
+          }catch(err){
+            return res.status(400).json({ msg: err.message })
+            }
+            }
+            changePassword(req, res) {
+              const { token, password, confirmPassword } = req.body;
+              // Verificamos que los campos estén llenos
+              if (!token || !password || !confirmPassword) {
+                return res.status(400).json({ msg: 'Por favor llene todos los campos.' });
+                }
+                // Comprobamos que las contraseñas coincidan
+                if (password !== confirmPassword) {
+                  return res.status(400).json({ msg: 'Las contraseñas no son iguales.' });
+                  }
+                  // Verificamos si el token es válido y no ha expirado
+                  const payload = utils.verifyToken(token, process.env.PASSWORD_RESET_SECRET);
+                  if (!payload) {
+                    return res.status(401).json({ msg: 'Token inválido o caducado.' });
+                    }
+                    // Actualizamos la contraseña del usuario con el token proporcionado
+                    userService.updatePassword(payload.email, password)
+                    .then(() => {
+                      // Respondemos al cliente con una confirmación exitosa
+                      return res.status(200).json({ msg: 'Contraseña actualizada correctamente.' });
+                      }).catch(err => {
+                        console.error(err);
+                        return res.status(500).json({ msg: 'Error interno del servidor.' });
+                        });
+  }
 }
 
 module.exports = UserController;

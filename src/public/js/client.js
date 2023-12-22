@@ -358,6 +358,55 @@ const cartTotalElement = document.getElementById('cartTotal')
   });
 }
 
+
+const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+  if (forgotPasswordForm) {
+    forgotPasswordForm.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+    try {
+      // Realizar la petición POST usando Fetch
+      const response = await fetch(`/users/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email}),
+      });
+      console.log("Responseeee", response);
+      // Verificar si la respuesta es exitosa
+      if (!response.ok) {
+        console.error("Error al restablecer la contraseña");
+        alert("Error al restablecer la contraseña!");
+        return;
+      }
+
+      try {
+        // Intentar analizar la respuesta como JSON
+        const data = await response.json();
+        console.log(data);
+        // Verificar el éxito en la respuesta JSON
+        if (data.status === 'success') {
+          alert(`Felicidades: ${data.message} - 
+          Usuario: ${data.ticket.purchaser} - 
+          Código de compra: ${data.ticket.code} - 
+          Por un total de: ${data.ticket.amount}`);
+          window.location.href = '/products';
+        } else {
+          alert(`Error: ${data.message}`);
+        }
+      } catch (error) {
+        console.error("Error al analizar la respuesta JSON:", error);
+        alert("Error al analizar la respuesta JSON");
+      }
+    } catch (error) {
+      console.error("Error al realizar la solicitud:", error);
+      alert("Error al realizar la solicitud");
+    }
+  });
+}
+
   // FUNCION PARA IR A CARRITO CON BOTON 
   // const goToCartButtons = document.querySelectorAll('.go-to-cart-button');
   // if(goToCartButtons){
