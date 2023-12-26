@@ -96,7 +96,7 @@ router.get("/carrito/:cid", utils.passportCall("jwt"), utils.isUser, async (req,
 
 router.get("/forgot-password", async (req, res) => {
   try {
-    res.render("forgotPassword}", { title: "Recuperar Contraseña" })
+    res.render("forgotPassword", { title: "Recuperar Contraseña" })
   } catch (error) {
     req.logger.error("Error al reder la pagina", error);
     res.status(500).send({ message: "Error interno del servidor" });
@@ -105,7 +105,7 @@ router.get("/forgot-password", async (req, res) => {
 
 router.get("/reset-password", async (req, res) => {
   try {
-    res.render("resetPassword}", { title: "Restablecer Contraseña" })
+    res.render("resetPassword", { title: "Restablecer Contraseña" })
   } catch (error) {
     req.logger.error("Error en el reset de la contraseña", error);
     res.status(500).send({ message: "Error restablecer la contraseña" });
