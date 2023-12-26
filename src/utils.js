@@ -33,6 +33,18 @@ const authToken = (req, res, next) =>{
   })
 }
 
+const verifyToken = (token) => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, process.env.PRIVATE_KEY, (err, decoded) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(decoded);
+      }
+    });
+  });
+};
+
 const passportCall = (strategy) => {
   return (req, res, next) => {
     passport.authenticate(strategy, function(err, user, info) {
@@ -112,5 +124,6 @@ module.exports = {
   isAdmin,
   isUser,
   generateUniqueCode,
-  calculateTotal
+  calculateTotal,
+  verifyToken
 }

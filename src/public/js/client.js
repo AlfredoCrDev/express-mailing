@@ -381,31 +381,56 @@ const forgotPasswordForm = document.getElementById('forgotPasswordForm');
         alert("Error al restablecer la contraseña!");
         return;
       }
-
-      try {
-        // Intentar analizar la respuesta como JSON
-        const data = await response.json();
-        console.log(data);
-        // Verificar el éxito en la respuesta JSON
-        if (data.status === 'success') {
-          alert(`Felicidades: ${data.message} - 
-          Usuario: ${data.ticket.purchaser} - 
-          Código de compra: ${data.ticket.code} - 
-          Por un total de: ${data.ticket.amount}`);
-          window.location.href = '/products';
-        } else {
-          alert(`Error: ${data.message}`);
-        }
-      } catch (error) {
-        console.error("Error al analizar la respuesta JSON:", error);
-        alert("Error al analizar la respuesta JSON");
-      }
+      alert("Correo enviado con éxito")
+      window.location.href = '/';
     } catch (error) {
       console.error("Error al realizar la solicitud:", error);
       alert("Error al realizar la solicitud");
     }
   });
 }
+
+const resetPasswordForm = document.getElementById('resetPasswordForm');
+
+if (resetPasswordForm) {
+  resetPasswordForm.addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const email = document.getElementById('email').value;
+    const token = document.getElementById('token').value;
+
+    if (newPassword !== confirmPassword) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
+
+    try {
+      const response = await fetch('/users/reset-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newPassword, token, email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message); // Mensaje de éxito
+        window.location.href = '/';
+      } else {
+        alert(data.error); // Mensaje de error
+      }
+    } catch (error) {
+      console.error('Error al realizar la solicitud:', error);
+      alert('Error al restablecer la contraseña');
+    }
+  });
+}
+
+
 
   // FUNCION PARA IR A CARRITO CON BOTON 
   // const goToCartButtons = document.querySelectorAll('.go-to-cart-button');

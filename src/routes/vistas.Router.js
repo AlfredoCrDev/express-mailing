@@ -104,8 +104,10 @@ router.get("/forgot-password", async (req, res) => {
 });
 
 router.get("/reset-password", async (req, res) => {
+  const token = req.query.token;
+  const email = req.query.email;
   try {
-    res.render("resetPassword", { title: "Restablecer Contraseña" })
+    res.render("resetPassword", { title: "Restablecer Contraseña", token, email })
   } catch (error) {
     req.logger.error("Error en el reset de la contraseña", error);
     res.status(500).send({ message: "Error restablecer la contraseña" });

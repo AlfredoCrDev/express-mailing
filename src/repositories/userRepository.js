@@ -62,6 +62,20 @@ class UserRepository {
       throw new Error(`Error en UserRepository.deleteUser: ${error.message}`);
     }
   }
+
+  async updatePassword(userId, newPassword) {
+    try {
+      const updatedUser = await userModel.findByIdAndUpdate(
+        userId,
+        { password: newPassword },
+        { new: true }
+      );
+
+      return updatedUser;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = UserRepository;

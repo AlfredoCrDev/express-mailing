@@ -48,11 +48,21 @@ async function deleteUser(userEmail) {
   return userRepository.deleteUser(userEmail);
 }
 
+async function updatePassword(userId, newPassword) {
+  try { 
+    const updatedUser = await userRepository.updatePassword(userId, newPassword);
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   getAllUsers,
   getUserByEmail,
   createUser,
   updateUser,
   deleteUser,
-  getUserById
+  getUserById,
+  updatePassword
 };
