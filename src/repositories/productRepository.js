@@ -60,6 +60,15 @@ async findProductsByName(productName) {
     }
   }
 
+  async getProductById(productId) {
+    try {
+      const product = await productModel.findOne({_id: productId});
+      return product || null
+    } catch (error) {
+      throw new Error(`Error en ProductRepository.getProductById: ${error.message}`);
+    }
+  }
+
 
   async createProduct(productData) {
     try {

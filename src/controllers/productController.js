@@ -79,14 +79,16 @@ class ProductController {
 
   async deleteProduct(req, res) {
     const productId = req.params.pid;
+    const { userEmail, userRol } = req.body;
+
     try {
 
-      const deletedProduct = await productService.deleteProduct(productId);
+      const deletedProduct = await productService.deleteProduct(productId, userEmail, userRol);
       if(deletedProduct.deletedCount > 0){
         res.status(200).json({ status: "success", deletedProduct });
       } else {
         req.logger.warn("Error al tratar de eliminar el producto")
-        res.status(400).json({ status: "error", message: "Error al eliminar el porducto"})
+        res.status(400).json({ status: "error", deletedProduct})
       }
     } catch (error) {
       req.logger.error("Error al eliminar el producto: ", error);

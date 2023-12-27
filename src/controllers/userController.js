@@ -204,6 +204,18 @@ async createUser(req, res) {
       return res.status(500).json({ error: "Error interno del servidor" });
     }
   }
+
+  async toggleUserRole(req, res) {
+    const userId = req.params.uid;
+  
+    try {
+      const updatedUser = await userService.toggleUserRole(userId);
+      res.status(200).json({ status: 'success', user: updatedUser });
+    } catch (error) {
+      req.logger.error('Error al cambiar el rol del usuario:', error);
+      res.status(400).json({ status: 'error', message: error.message });
+    }
+  }
 }
 
 module.exports = UserController;

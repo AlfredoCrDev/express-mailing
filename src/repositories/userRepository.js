@@ -76,6 +76,26 @@ class UserRepository {
       throw error;
     }
   }
+
+  async toggleUserRole(userId) {
+    try {
+      const user = await userModel.findOne({_id: userId});
+  
+      if (!user) {
+        throw new Error('Usuario no encontrado');
+      }
+  
+      // Cambiar el rol del usuario
+      user.rol = user.rol === 'usuario' ? 'premium' : 'usuario';
+  
+      // Guardar el usuario actualizado en la base de datos
+      await user.save();
+  
+      return user;
+    } catch (error) {
+      throw new Error(`Error al cambiar el rol del usuario: ${error.message}`);
+    }
+  }
 }
 
 module.exports = UserRepository;

@@ -57,6 +57,15 @@ async function updatePassword(userId, newPassword) {
   }
 }
 
+async function toggleUserRole(userId) {
+  try {
+    const updatedUser = await userRepository.toggleUserRole(userId);
+    return updatedUser;
+  } catch (error) {
+    throw new Error(`Error al cambiar el rol del usuario en el servicio: ${error.message}`);
+  }
+}
+
 module.exports = {
   getAllUsers,
   getUserByEmail,
@@ -64,5 +73,6 @@ module.exports = {
   updateUser,
   deleteUser,
   getUserById,
-  updatePassword
+  updatePassword,
+  toggleUserRole
 };

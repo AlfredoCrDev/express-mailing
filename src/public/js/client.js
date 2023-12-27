@@ -170,23 +170,26 @@ if (formularioEliminar) {
   formularioEliminar.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const userEmail = document.getElementById("user").value;
+    const userRol = document.getElementById("rol").value;
     const productId = document.getElementById("idProduct").value;
 
     const response = await fetch(`/products/${productId}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      // body: JSON.stringify({ productId })
+      body: JSON.stringify({ userEmail, userRol })
     });
+    const data = await response.json()
     if (response.ok) {
       eliminarProductoDeLaTabla(productId);
       alert("Producto eliminado con éxito");
       formularioEliminar.reset();
       window.location.reload();
-    } else {
+    } else { 
       // Error al eliminar el producto
-      const errorMessage = await response.json();
-      console.error(errorMessage);
-      alert("Error al eliminar el producto");
+      const errorMessage = data.deletedProduct.message;
+      alert(errorMessage);
+      window.location.reload();
     }
   });
 }
@@ -220,7 +223,6 @@ if(formularioAgregar){
       stock,
       code,
       category,
-      status,
       userRol,
       userEmail
     };

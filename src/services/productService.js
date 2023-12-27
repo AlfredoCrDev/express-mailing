@@ -56,10 +56,27 @@ async function updateProduct(productId, productData) {
 }
 
 // Función para eliminar un producto
-async function deleteProduct(productId) {
+async function deleteProduct(productId, userEmail, userRole) {
   try {
-    const result = await productRepository.deleteProduct(productId);
-    return result
+    const product = await productRepository.getProductById(productId);
+    if (!product) {
+      throw new Error('Producto no encontrado');
+    }
+    // Comprobar si el usuario tiene permisos para borrar este producto
+    if (userRole === 'admin' || (userRole === 'premium' && product.owner === userEmail)) {
+      // El admin puede borrar cualquier producto
+      // El usuario premium solo puede borrar sus propios productos
+      await productRepository.deleteProduct(productId);
+      return { 
+        status: 'success', 
+        message: 'Producto eliminado correctamente' 
+      };
+    } else {
+      return {
+        status: false,
+        message: 'No puedes eliminar productos creados por el ADMIN'
+      }
+    }
   } catch (error) {
     // Manejar otros errores
     throw new Error(`Error en ProductService.deleteProduct: ${error.message}`);
