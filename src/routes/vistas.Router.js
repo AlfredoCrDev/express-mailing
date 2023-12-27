@@ -17,7 +17,7 @@ router.get("/register", async(req, res) => {
 })
 
 const allowedRoles = ["premium", "admin"];
-router.get("/profile", utils.passportCall("jwt"), utils.allowedRoles(allowedRoles), async(req, res) => {
+router.get("/profile", utils.passportCall("jwt"), utils.authorization(allowedRoles), async(req, res) => {
   try {
     const user = req.user.user;
     if(!user){
@@ -71,7 +71,7 @@ router.get("/email", utils.passportCall("jwt"), utils.isUser, async(req, res) =>
   }
 })
 
-router.get("/createProducts", utils.passportCall("jwt"), utils.allowedRoles(allowedRoles), async(req, res) => {
+router.get("/createProducts", utils.passportCall("jwt"), utils.authorization(allowedRoles), async(req, res) => {
   try {
     const productos = await productController.getAllProducts({limit:100})
     res.render("realTimeProducts", { title: "Registro de Productos", productos })
