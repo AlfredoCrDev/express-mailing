@@ -50,8 +50,9 @@ class CartController {
     const { quantity } = req.query;
     const cartId = req.params.cid
     const productId = req.params.pid
+    const userEmail = req.body.userEmail
     try {
-      const result = await cartService.addProductToCart(cartId, productId, quantity);
+      const result = await cartService.addProductToCart(cartId, productId, quantity, userEmail);
   
       if (result.success) {
         req.logger.info("Producto agregado con éxito")

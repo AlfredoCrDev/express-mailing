@@ -37,7 +37,8 @@ router.get("/profile", utils.passportCall("jwt"), utils.authorization(allowedRol
   }
 })
 
-router.get("/products", utils.passportCall("jwt"), utils.isUser, async(req, res) => {
+const buyerRole = ["usuario", "premium"]
+router.get("/products", utils.passportCall("jwt"), utils.authorization(buyerRole), async(req, res) => {
   try {
     const user = req.user.user;
     if(!user){
@@ -83,7 +84,7 @@ router.get("/createProducts", utils.passportCall("jwt"), utils.authorization(all
 })
 
 
-router.get("/carrito/:cid", utils.passportCall("jwt"), utils.isUser, async (req, res) => {
+router.get("/carrito/:cid", utils.passportCall("jwt"), utils.authorization(buyerRole), async (req, res) => {
   const cartId = req.params.cid;
   try {
     const productsInTheCart = await cartService.getCartById(cartId)

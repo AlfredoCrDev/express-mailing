@@ -37,9 +37,9 @@ async function getCartById(cartId){
   }
 }
 
-async function addProductToCart(cartId, productId, quantity) {
+async function addProductToCart(cartId, productId, quantity, userEmail) {
   try {
-    const result = await cartRepository.addProductToCart(cartId, productId, quantity);
+    const result = await cartRepository.addProductToCart(cartId, productId, quantity, userEmail);
 
     if (result.success) {
       return { success: true, message: "Producto agregado al carrito" };

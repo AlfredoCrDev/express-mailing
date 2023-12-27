@@ -259,6 +259,7 @@ const addToCartButtons = document.querySelectorAll('.add-to-cart-button');
         event.preventDefault();
 
         const productId = this.getAttribute('data-product-id');
+        const userEmail = document.getElementById("user").value;
         try {
             // Realizar la petición POST usando Fetch
         const response = await fetch(`/cart/${cartId}/product/${productId}`, {
@@ -266,7 +267,7 @@ const addToCartButtons = document.querySelectorAll('.add-to-cart-button');
           headers: {
             'Content-Type': 'application/json',
           },
-          // body: JSON.stringify({}),
+          body: JSON.stringify({userEmail}),
         })
         const data = await response.json();
         console.log(data);

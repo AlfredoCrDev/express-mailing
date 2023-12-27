@@ -9,7 +9,7 @@ class ProductRepository {
         if (limit) {
           queryOptions.limit = parseInt(limit);
         } else {
-          queryOptions.limit = 10;
+          queryOptions.limit = 50;
         }
   
         if (page){

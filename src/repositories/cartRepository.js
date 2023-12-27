@@ -42,10 +42,11 @@ class CarRepository {
     }
   }
 
-  async addProductToCart(cartId, productId, quantity=1){
+  async addProductToCart(cartId, productId, quantity=1, userEmail){
     try {
       const cart = await cartModel.findOne({_id: cartId})
       const product = await productModel.findOne({_id: productId});
+      console.log("PRODUCTOOO", product.owner);
       if (!cart) {
         return {
           success: false,
@@ -58,6 +59,13 @@ class CarRepository {
           success: false,
           message: `No existe un producto con el Id ${productId}`,
         };
+      }
+
+      if(product.owner === userEmail){
+        return{
+          success:false,
+          message:'No puedes agregar tus propios productos'
+        }
       }
 
       // Validar si la cantidad es mayor al stock disponible
