@@ -73,8 +73,9 @@ router.get("/email", utils.passportCall("jwt"), utils.isUser, async(req, res) =>
 
 router.get("/createProducts", utils.passportCall("jwt"), utils.authorization(allowedRoles), async(req, res) => {
   try {
-    const productos = await productController.getAllProducts({limit:100})
-    res.render("realTimeProducts", { title: "Registro de Productos", productos })
+    const user = req.user.user
+    const productos = await productRepository.getAllProducts({limit:100})
+    res.render("realTimeProducts", { title: "Registro de Productos", productos, user })
   } catch (error) {
     console.log("Error al tratar de mostrar los productos", error);
     res.status(500).send("Error interno del servidor");

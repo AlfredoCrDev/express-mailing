@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (userResponse.ok) {
           const userData = await userResponse.json();
-          if (userData.payload.rol === "admin") {
+          if (userData.payload.rol === "admin" || userData.payload.rol === "premium") {
             // Redirige al perfil de administrador
             window.location.assign("/profile");
           } else if (userData.payload.rol === "usuario") {
@@ -204,7 +204,9 @@ if(formularioAgregar){
     const stock = parseInt(document.getElementById("stock").value);
     const code = document.getElementById("code").value;
     const category = document.getElementById("category").value;
-    const status = document.getElementById("status").value;
+    const userEmail = document.getElementById("user").value;
+    const userRol = document.getElementById("rol").value;
+
     // Validar que los campos no estén vacíos
     if (!title || !description || isNaN(price) || isNaN(stock) || !code) {
       alert("Por favor, complete todos los campos.");
@@ -219,6 +221,8 @@ if(formularioAgregar){
       code,
       category,
       status,
+      userRol,
+      userEmail
     };
 
     const response = await fetch(`/products/addproduct`, {

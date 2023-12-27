@@ -23,7 +23,7 @@ async function getProductByCode(codeProduct) {
 }
 
 // Función para crear un nuevo producto
-async function createProduct({ title, description, price, stock, category, code }) {
+async function createProduct({ title, description, price, stock, category, code, owner }) {
   try {
     const newProduct = {
       title,
@@ -32,6 +32,7 @@ async function createProduct({ title, description, price, stock, category, code 
       stock,
       category,
       code,
+      owner
     };
     const product = productRepository.createProduct(newProduct); 
     return product

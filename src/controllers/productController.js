@@ -29,27 +29,36 @@ class ProductController {
     }
   }
 
-async createProduct(req, res) {
-  const { title, description, price, stock, category, code } = req.body;  
-  try {
-    // Verificar si el producto existe
-    const productExists = await productService.getProductByCode(code);
-    if (productExists) {
-      req.logger.warn(`El codigo ${code} ya esta siendo utilizado`)
-      return res.status(400).json({ status: "error", message: `El código ${code} ya esta siendo utilizado` });
+
+  async createProduct(req, res) {
+    const { title, description, price, stock, category, code, userEmail, userRol } = req.body;  
+
+    try {
+      // Verificar si el producto existe
+      const productExists = await productService.getProductByCode(code);
+      if (productExists) {
+        req.logger.warn(`El código ${code} ya está siendo utilizado`);
+        return res.status(400).json({ status: "error", message: `El código ${code} ya está siendo utilizado` });
+      }
+  
+      // Definir el valor de "owner" basado en el rol del usuario
+      const owner = userRol === 'premium' ? userEmail : 'admin';
+      // Crear el producto con el campo "owner"
+      const product = await productService.createProduct({ title, description, price, stock, category, code, owner }); 
+  
+      if (!product) {
+        req.logger.warn("Faltan datos para crear el producto");
+        throw new Error('Faltan datos para crear un producto');
+      }
+  
+      req.logger.info("Producto creado con éxito");
+      res.status(200).json({ status: "success", product });
+    } catch (error) {
+      req.logger.error("Error al crear el producto: ", error);
+      res.status(400).json({ status: "error", message: error.message });
     }
-    const product = await productService.createProduct({ title, description, price, stock, category, code }); 
-    if(!product){
-      req.logger.warn("Faltan datos para crear el producto")
-      throw new Error('Faltan datos para crear un producto')
-    }
-    req.logger.info("Producto creado con éxito")
-    res.status(200).json({ status: "success", product });
-  } catch (error) {
-    req.logger.error("Error al crear al el producto: ", error);
-    res.status(400).json({ status: "error", message: error.message });
-  }
-}
+  };
+  
 
   async updateProduct(req, res) {
     try {
