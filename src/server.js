@@ -3,6 +3,8 @@ const app = express()
 const handlebars = require("express-handlebars");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const swaggerJsdoc = require("swagger-jsdoc");
+const SwaggerUiExpress = require("swagger-ui-express")
 
 // Importar Controladores para Socket
 const ProductController = require("./controllers/productController.js");
@@ -41,6 +43,20 @@ app.use(express.static(path.join(__dirname, "public")));
 connectDB();
 
 const PORT = process.env.PORT
+
+const swaggerOptions = {
+  definition:{
+    openapi: '3.0.1',
+    info:{
+      title:'Documentacion API RESTful ecommerce',
+      description: "Api clase swagger"
+    }
+  },
+  apis: ['./src/docs/**/*.yaml']
+}
+
+const specs = swaggerJsdoc(swaggerOptions)
+app.use("/apidocs", SwaggerUiExpress.serve, SwaggerUiExpress.setup(specs))
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

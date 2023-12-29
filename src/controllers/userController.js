@@ -61,7 +61,7 @@ class UserController {
         req.logger.warn("El usuario solicitado no existe");
         return res.status(404).send();
         }
-      req.logger.info(`Mostrando información del usuario con id "${userId}":`, user);
+      req.logger.info(`Mostrando información del usuario con id "${userId}":`);
       res.json({status: "success", message: "Usuario encontrado"});
     } catch (error) {
       req.logger.error(`Ocurrió un error al obtener el usuario por su ID: ${error}`);
