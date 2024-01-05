@@ -76,6 +76,8 @@ app.use("/", loggerRouter)
 
 
 
-app.listen(PORT, ()=>{
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
-})
+const server = app.listen(process.env.PORT, () => {
+  console.log(`Servidor corriendo en el puerto ${process.env.PORT}`);
+});
+
+module.exports = server;

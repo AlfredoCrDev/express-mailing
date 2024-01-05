@@ -52,7 +52,7 @@ class ProductController {
       }
   
       req.logger.info("Producto creado con éxito");
-      res.status(200).json({ status: "success", product });
+      res.status(201).json({ status: "success", product });
     } catch (error) {
       req.logger.error("Error al crear el producto: ", error);
       res.status(400).json({ status: "error", message: error.message });

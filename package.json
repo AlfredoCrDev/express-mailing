@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/server.js"
+    "start": "nodemon src/server.js",
+    "test": "mocha tests/products.test.js --timeout 5000"
   },
   "keywords": [],
   "author": "",
@@ -27,5 +28,10 @@
     "swagger-ui-express": "^5.0.0",
     "uuidv4": "^6.2.13",
     "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "chai": "^4.0.0",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
   }
 }
