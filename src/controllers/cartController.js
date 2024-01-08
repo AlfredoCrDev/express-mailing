@@ -34,12 +34,12 @@ class CartController {
     const cartId = req.params.cid
     try {
       const result = await cartService.getCartById(cartId);
-      if (result.success) {
-        req.logger.info(`Información del carro ${cartId} obtenido correctamente`);
-        return res.status(200).json(result);
-      }  else {
+      if (!result.success) {
+        console.log("ENTRO AQUI");
         return res.status(404).json(result);
       }
+      req.logger.info(`Información del carro ${cartId} obtenido correctamente`);
+      return res.status(200).send(result);
     } catch (error) {
       req.logger.error(`Error en el controlador getCartById: ${error}`);
       res.status(500).send({message: "Error al obtener el carrtio por ID"})    

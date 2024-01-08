@@ -8,7 +8,7 @@ const productController = new ProductController();
 router.get('/api', productController.getAllProducts);
 router.post('/search', productController.findProductsByName);
 router.post('/addProduct', productController.createProduct);
-router.put('/update/:pid', productController.updateProduct);
+router.put('/:pid', productController.updateProduct);
 router.delete('/:pid', productController.deleteProduct);
 
 

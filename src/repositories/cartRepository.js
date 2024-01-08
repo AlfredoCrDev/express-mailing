@@ -46,7 +46,6 @@ class CarRepository {
     try {
       const cart = await cartModel.findOne({_id: cartId})
       const product = await productModel.findOne({_id: productId});
-      console.log("PRODUCTOOO", product.owner);
       if (!cart) {
         return {
           success: false,

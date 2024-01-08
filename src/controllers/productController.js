@@ -70,7 +70,7 @@ class ProductController {
         return res.status(404).json({ message: "No se ha encontrado el producto" });
         }
       req.logger.info(`Se ha actualizado correctamente el producto con id "${productId}"`);
-      res.json(updatedProduct);
+      res.status(201).json(updatedProduct);
     } catch (error) {
       req.logger.error(`Error al actualizar el producto con id "${productId}": `, error);
       res.status(500).json({ error: error.message });

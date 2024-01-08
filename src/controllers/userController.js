@@ -108,7 +108,7 @@ async createUser(req, res) {
       const result = await userService.deleteUser(userEmail);
       if (!result) throw new Error('No se pudo eliminar el usuario');
       req.logger.info(`Se ha eliminado correctamente al usuario con la dirección de correo "${userEmail}"`);
-      res.json({ status:"success", message: 'User deleted successfully', result });
+      res.status(200).json({ status:"success", message: 'User deleted successfully', result });
     } catch (error) {
       req.logger.error(`Error al intentar borrar el usuario con la dirección de correo "${userEmail}".`, error);
       res.status(500).json({ error: error.message });
